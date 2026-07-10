@@ -36,3 +36,20 @@ export interface ProdutoCreateRequest {
   marca?:            string;
   modelo?:           string;
 }
+
+export interface ProdutoImportacaoErro {
+  linha: number;
+  campo: string;
+  valor: string | null;
+  mensagem: string;
+}
+
+export interface ProdutoImportacaoResultado {
+  sucesso: boolean;
+  nomeArquivo: string;
+  totalLinhas: number;
+  linhasValidas: number;
+  produtosImportados: number;
+  linhasComErro: number;
+  erros: ProdutoImportacaoErro[];
+}
