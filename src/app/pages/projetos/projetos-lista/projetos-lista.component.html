@@ -1,0 +1,77 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Projetos & Demandas B2B</h1>
+      <p class="page-subtitle">Acompanhe as propostas de infraestrutura e análise de dores do ecossistema.</p>
+    </div>
+
+    @if (auth.isCliente() || auth.isAdmin()) {
+      <button routerLink="novo" class="btn btn--primary">
+        + Nova Demanda
+      </button>
+    }
+  </div>
+
+  @if (carregando()) {
+    <div class="state-container">
+      <div class="spinner"></div>
+      <p>Consultando banco de dados...</p>
+    </div>
+  } 
+  @else if (erroMsg()) {
+    <div class="state-container state-container--error">
+      <p>{{ erroMsg() }}</p>
+      <button (click)="carregarProjetos()" class="btn btn--outline">Tentar Novamente</button>
+    </div>
+  } 
+  @else {
+    @if (projetoService.projetos().length === 0) {
+      <div class="state-container">
+        <p>Nenhum escopo de projeto encontrado para este perfil.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th style="width: 35%">Empresa / Contato</th>
+              <th style="width: 15%">Volumetria</th>
+              <th style="width: 20%">Infra Atual</th>
+              <th style="width: 15%">Status</th>
+              <th style="width: 15%" class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (proj of projetoService.projetos(); track proj.id) {
+              <tr>
+                <td>
+                  <span class="project-company">{{ proj.nomeEmpresa }}</span>
+                  <span class="project-contact">{{ proj.nomeContato }}</span>
+                </td>
+                <td>
+                  <span class="user-volume">{{ proj.volumetriaUsuarios }} users</span>
+                  @if (proj.utilizaNuvem) {
+                    <span class="tag-cloud">{{ proj.provedorNuvem || 'Nuvem' }}</span>
+                  }
+                </td>
+                <td>
+                  <span class="infra-text" [title]="proj.infraAtual">{{ proj.infraAtual }}</span>
+                </td>
+                <td>
+                  <span class="badge-status" [attr.data-status]="proj.status">
+                    {{ proj.status || 'Recebido' }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <a [routerLink]="[proj.id]" class="btn btn--sm btn--ghost">
+                    Detalhes
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

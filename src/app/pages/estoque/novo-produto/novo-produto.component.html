@@ -1,0 +1,93 @@
+<div class="form-container">
+  
+  <div class="form-header">
+    <button type="button" class="btn-back" (click)="voltar()" aria-label="Voltar para estoque">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div>
+      <h1 class="form-title">Novo Ativo ou Insumo</h1>
+      <p class="form-subtitle">Cadastre itens de hardware ou licenças para controle de inventário do laboratório.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="cadastrar()" class="app-card-form" novalidate>
+    
+    <div class="campo" [class.campo--erro]="temErro('nome')">
+      <label class="campo__label" for="nome">Nome do Item / Modelo *</label>
+      <input id="nome" type="text" class="campo__input" formControlName="nome" placeholder="Ex: Servidor Dell PowerEdge R750">
+      @if (temErro('nome')) {
+        <span class="campo__erro">Nome obrigatório (mínimo 3 caracteres).</span>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="campo">
+        <label class="campo__label" for="marca">Marca</label>
+        <input id="marca" type="text" class="campo__input" formControlName="marca" placeholder="Ex: Dell, Cisco, Intel">
+      </div>
+
+      <div class="campo">
+        <label class="campo__label" for="modelo">Modelo</label>
+        <input id="modelo" type="text" class="campo__input" formControlName="modelo" placeholder="Ex: R750, Catalyst 2960">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="campo">
+        <label class="campo__label" for="sku">Código SKU</label>
+        <input id="sku" type="text" class="campo__input" formControlName="codigoSku" placeholder="Ex: IB-HW-001">
+      </div>
+
+      <div class="campo" [class.campo--erro]="temErro('categoria')">
+        <label class="campo__label" for="categoria">Categoria *</label>
+        <select id="categoria" class="campo__select" formControlName="categoria">
+          <option value="" disabled selected>Selecione...</option>
+          @for (cat of categorias; track cat.value) {
+            <option [value]="cat.value">{{ cat.label }}</option>
+          }
+        </select>
+        @if (temErro('categoria')) {
+          <span class="campo__erro">Selecione uma categoria válida.</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-row form-row--three">
+      <div class="campo">
+        <label class="campo__label" for="preco">Preço de Custo</label>
+        <input id="preco" type="text" class="campo__input" formControlName="precoCusto" placeholder="R$ 0,00">
+      </div>
+
+      <div class="campo" [class.campo--erro]="temErro('estoqueInicial')">
+        <label class="campo__label" for="estoque">Qtd Inicial *</label>
+        <input id="estoque" type="number" class="campo__input" formControlName="estoqueInicial">
+        @if (temErro('estoqueInicial')) {
+          <span class="campo__erro">Mínimo 0.</span>
+        }
+      </div>
+
+      <div class="campo" [class.campo--erro]="temErro('quantidadeMinima')">
+        <label class="campo__label" for="qtdMinima">Aviso Reposição (Qtd Mínima) *</label>
+        <input id="qtdMinima" type="number" class="campo__input" formControlName="quantidadeMinima">
+        @if (temErro('quantidadeMinima')) {
+          <span class="campo__erro">Mínimo 0.</span>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label class="campo__label" for="especificacoes">Especificações Técnicas / Notas</label>
+      <textarea id="especificacoes" rows="3" class="campo__textarea" formControlName="especificacoes" placeholder="Detalhes como Processador, RAM, Garantia ou Chave de Ativação..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn--ghost" (click)="voltar()" [disabled]="salvando()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || salvando()">
+        {{ salvando() ? 'Salvando...' : 'Confirmar Cadastro' }}
+      </button>
+    </div>
+
+  </form>
+</div>

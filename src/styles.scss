@@ -1,0 +1,129 @@
+// src/styles.scss
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+
+// ── Tokens globais ────────────────────────────────────────────────────────
+:root {
+  // Paleta escura corporativa
+  --ib-bg:          #0A0C10;
+  --ib-surface:     #10131A;
+  --ib-surface-2:   #161A24;
+  --ib-surface-3:   #1C2130;
+  --ib-border:      rgba(255, 255, 255, 0.07);
+  --ib-border-md:   rgba(255, 255, 255, 0.12);
+
+  // Acentos de marca — Identidade Verde Neon IBATECH
+  --ib-blue:        #00D95F;
+  --ib-blue-hover:  #2EEA62;
+  --ib-blue-soft:   rgba(57, 255, 20, 0.12);
+  --ib-blue-border: rgba(57, 255, 20, 0.18);
+
+  // Aliases semânticos da nova identidade (verde)
+  --ib-green:         #00D95F;
+  --ib-green-neon:    #39FF14;
+  --ib-green-dark:    #00A84F;
+  --ib-green-hover:   #2EEA62;
+  --ib-green-glow:    rgba(57, 255, 20, 0.25);
+  --ib-green-border:  rgba(57, 255, 20, 0.15);
+  --ib-green-soft:    rgba(57, 255, 20, 0.08);
+
+  --ib-gold:        #C9A84C;
+  --ib-gold-soft:   rgba(201, 168, 76, 0.10);
+  --ib-gold-border: rgba(201, 168, 76, 0.25);
+
+
+  // Semânticas
+  --ib-success:     #22C55E;
+  --ib-success-soft:rgba(34, 197, 94, 0.10);
+  --ib-warning:     #F59E0B;
+  --ib-warning-soft:rgba(245, 158, 11, 0.10);
+  --ib-danger:      #EF4444;
+  --ib-danger-soft: rgba(239, 68, 68, 0.10);
+
+  // Texto
+  --ib-text:        #E8EAF0;
+  --ib-text-muted:  #6B7280;
+  --ib-text-dim:    #3A3F4A;
+  --ib-white:       #FFFFFF;
+
+  // Tipografia
+  --ff-display: 'Syne', sans-serif;
+  --ff-body:    'DM Sans', sans-serif;
+  --ff-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  // Layout
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+
+  // Sombra
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.6);
+
+  // Transições
+  --t-fast:   0.15s ease;
+  --t-base:   0.25s ease;
+  --t-slow:   0.45s ease;
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:   var(--ib-bg);
+  color:        var(--ib-text);
+  font-family:  var(--ff-body);
+  font-weight:  400;
+  line-height:  1.65;
+  min-height:   100vh;
+}
+
+// ── Utilitários globais ───────────────────────────────────────────────────
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
+}
+
+// Badge de status de projetos
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &--recebido        { background: rgba(107,114,128,.15); color: #9CA3AF;        }
+  &--em-analise      { background: var(--ib-blue-soft);   color: var(--ib-green-neon); }
+  &--proposta-enviada{ background: var(--ib-gold-soft);   color: var(--ib-gold); }
+
+  &--aprovado        { background: var(--ib-success-soft);color: var(--ib-success); }
+  &--cancelado       { background: var(--ib-danger-soft); color: var(--ib-danger);  }
+
+  &::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}
+
+// Scrollbar customizada
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--ib-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--ib-text-dim);
+  border-radius: 3px;
+  &:hover { background: var(--ib-text-muted); }
+}

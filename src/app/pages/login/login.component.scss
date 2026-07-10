@@ -1,0 +1,415 @@
+// src/app/pages/login/login.component.scss
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+// ── Shell split-screen ────────────────────────────────────────────────────
+.login-shell {
+  display:     grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+// ── Painel esquerdo — Branding ────────────────────────────────────────────
+.login-brand {
+  position:   relative;
+  background: var(--ib-surface);
+  border-right: 1px solid var(--ib-border);
+  overflow:   hidden;
+
+  &__inner {
+    position:       relative;
+    z-index:        2;
+    height:         100%;
+    display:        flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:        3rem;
+  }
+
+  &__logo {
+    display:     flex;
+    align-items: center;
+    width:       100%;
+    max-width:   200px; /* Largura um pouco maior para acomodar confortavelmente o banner horizontal */
+    margin-bottom: 2rem;
+
+    .brand-logo-img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+  
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+
+      .brand-title {
+        font-family: var(--ff-display);
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+
+        span {
+          background: linear-gradient(to right, var(--ib-green), var(--ib-green-neon));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      }
+
+      .brand-subtitle {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--ib-green-neon);
+        letter-spacing: 1.5px;
+        margin-top: 2px;
+      }
+
+    }
+  }
+
+  &__copy {
+    h1 {
+      font-family:  var(--ff-display);
+      font-size:    clamp(1.8rem, 2.8vw, 2.6rem);
+      font-weight:  800;
+      color:        #fff;
+      line-height:  1.12;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
+    }
+    p {
+      font-size:  15px;
+      color:      var(--ib-text-muted);
+      line-height: 1.7;
+      max-width:  340px;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    gap:     2rem;
+  }
+
+  &__grid {
+    position: absolute;
+    inset:    0;
+    z-index:  1;
+    background-image:
+      linear-gradient(var(--ib-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ib-border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(
+      ellipse 70% 80% at 30% 60%,
+      black 30%,
+      transparent 100%
+    );
+  }
+}
+
+.login-stat {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+
+  &__val {
+    font-family:  var(--ff-display);
+    font-size:    1.6rem;
+    font-weight:  700;
+    color:        #fff;
+    line-height:  1;
+  }
+
+  &__label {
+    font-size: 12px;
+    color:     var(--ib-text-muted);
+  }
+}
+
+// ── Orbs decorativos ──────────────────────────────────────────────────────
+.orb {
+  position:      absolute;
+  border-radius: 50%;
+  filter:        blur(70px);
+  pointer-events: none;
+  z-index:       1;
+
+  &--blue {
+    width:      350px;
+    height:     350px;
+    background: var(--ib-green-soft);
+    top:        20%;
+    left:       -10%;
+  }
+
+
+  &--gold {
+    width:      220px;
+    height:     220px;
+    background: rgba(201, 168, 76, 0.08);
+    bottom:     15%;
+    right:      -5%;
+  }
+}
+
+// ── Painel direito — Formulário ───────────────────────────────────────────
+.login-form-panel {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         2rem;
+  background:      var(--ib-bg);
+}
+
+.login-form-wrap {
+  width:     100%;
+  max-width: 400px;
+  display:   flex;
+  flex-direction: column;
+  gap:       1.75rem;
+}
+
+.login-mobile-header {
+  display:     none;
+  align-items: center;
+  width:       100%;
+  max-width:   160px;
+  margin-bottom: 1.5rem;
+
+  .brand-logo-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+
+    .brand-title {
+      font-family: var(--ff-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+
+      span {
+        background: linear-gradient(to right, var(--ib-green), var(--ib-green-neon));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+}
+
+.login-form-header {
+
+  h2 {
+    font-family:  var(--ff-display);
+    font-size:    1.6rem;
+    font-weight:  700;
+    color:        #fff;
+    margin-bottom: 0.4rem;
+  }
+  p {
+    font-size: 14px;
+    color:     var(--ib-text-muted);
+  }
+}
+
+// ── Erro global ───────────────────────────────────────────────────────────
+.login-erro {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  padding:       0.75rem 1rem;
+  background:    var(--ib-danger-soft);
+  border:        1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  color:         var(--ib-danger);
+  font-size:     13px;
+  animation:     shake 0.4s ease;
+}
+
+// ── Formulário ────────────────────────────────────────────────────────────
+.login-form {
+  display:        flex;
+  flex-direction: column;
+  gap:            1.25rem;
+}
+
+.campo {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+
+  &--erro {
+    .campo__input {
+      border-color: var(--ib-danger) !important;
+      box-shadow:   0 0 0 3px rgba(239, 68, 68, 0.08);
+    }
+  }
+
+  &__label {
+    font-size:   13px;
+    font-weight: 500;
+    color:       var(--ib-text-muted);
+  }
+
+  &__input-wrap {
+    position: relative;
+    display:  flex;
+    align-items: center;
+  }
+
+  &__icon {
+    position:    absolute;
+    left:        12px;
+    color:       var(--ib-text-dim);
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  &__input {
+    width:         100%;
+    background:    var(--ib-surface);
+    border:        1px solid var(--ib-border);
+    border-radius: var(--radius-md);
+    color:         var(--ib-text);
+    font-family:   var(--ff-body);
+    font-size:     15px;
+    padding:       11px 14px 11px 40px;
+    outline:       none;
+    transition:    border-color var(--t-fast), box-shadow var(--t-fast);
+
+    &::placeholder { color: var(--ib-text-dim); }
+    &:hover        { border-color: var(--ib-border-md); }
+    &:focus        {
+      border-color: var(--ib-green);
+      box-shadow:   0 0 0 3px var(--ib-green-soft);
+    }
+  }
+
+
+  &__toggle-senha {
+    position:   absolute;
+    right:      12px;
+    background: none;
+    border:     none;
+    cursor:     pointer;
+    color:      var(--ib-text-dim);
+    padding:    4px;
+    border-radius: 4px;
+    transition: color var(--t-fast);
+    display:    flex;
+    align-items: center;
+
+    &:hover { color: var(--ib-text-muted); }
+  }
+
+  &__erro {
+    font-size:  12px;
+    color:      var(--ib-danger);
+  }
+}
+
+// ── Botão de entrar ───────────────────────────────────────────────────────
+.btn-entrar {
+  width:         100%;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  gap:           8px;
+  padding:       13px 24px;
+  background:    var(--ib-green);
+  border:        none;
+  border-radius: var(--radius-md);
+  color:         #fff;
+  font-family:   var(--ff-body);
+  font-size:     15px;
+  font-weight:   500;
+  cursor:        pointer;
+  transition:    background var(--t-fast), transform var(--t-fast);
+  margin-top:    0.5rem;
+
+  &:hover:not(:disabled) {
+    background: var(--ib-green-hover);
+    transform:  translateY(-1px);
+  }
+
+
+  &:disabled {
+    opacity: 0.6;
+    cursor:  not-allowed;
+  }
+
+  &--loading { cursor: wait; }
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────────
+.spinner {
+  width:         16px;
+  height:        16px;
+  border:        2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation:     spin 0.7s linear infinite;
+  flex-shrink:   0;
+}
+
+// ── Rodapé ────────────────────────────────────────────────────────────────
+.login-form-footer {
+  display:     flex;
+  align-items: center;
+  gap:         0.75rem;
+  font-size:   13px;
+  color:       var(--ib-text-dim);
+
+  &__sep { color: var(--ib-text-dim); }
+}
+
+.login-back-link {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  color:       var(--ib-text-muted);
+  text-decoration: none;
+  font-size:   13px;
+  transition:  color var(--t-fast);
+
+  &:hover { color: var(--ib-text); }
+}
+
+// ── Animações ─────────────────────────────────────────────────────────────
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0);    }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px);  }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px);  }
+}
+
+// ── Responsivo ────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand {
+    display: none;
+  }
+
+  .login-mobile-header {
+    display: flex;
+  }
+}

@@ -1,0 +1,149 @@
+<div class="page-container">
+  
+  <div class="detail-actions">
+    <a routerLink="/dashboard/projetos" class="btn-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar para a lista
+    </a>
+  </div>
+
+  @if (carregando()) {
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Carregando dados da demanda...</p>
+    </div>
+  } @else if (projeto()) {
+    
+    <div class="detail-header">
+      <div>
+        <span class="detail-header__tag">Código ID: #{{ projeto()?.id?.substring(0, 8) }}</span>
+        <h1 class="detail-header__title">{{ projeto()?.nomeEmpresa }}</h1>
+        <p class="detail-header__subtitle">Registrado em {{ projeto()?.criadoEm | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+
+      <span class="badge" 
+            [ngClass]="$any(badgeClasses)[(projeto()?.status || '').toUpperCase().replace(' ', '_')] || 'badge--recebido'">
+        {{ $any(labels)[(projeto()?.status || '').toUpperCase().replace(' ', '_')] || projeto()?.status || 'Recebido' }}
+      </span>
+    </div>
+
+    <div class="detail-grid">
+      
+      <div class="detail-main">
+        
+        <section class="detail-card">
+          <h3 class="detail-card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Informações de Contato
+          </h3>
+          <div class="info-group">
+            <div>
+              <label>Responsável</label>
+              <p>{{ projeto()?.nomeContato }}</p>
+            </div>
+            <div>
+              <label>E-mail Corporativo</label>
+              <p>{{ projeto()?.emailContato }}</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-card">
+          <h3 class="detail-card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            Dores e Objetivos do Projeto
+          </h3>
+          <div class="text-content">
+            <p>{{ projeto()?.descricaoDores }}</p>
+          </div>
+          @if (projeto()?.observacoesExtra) {
+            <div class="text-content text-content--extra">
+              <label>Observações Extras</label>
+              <p>{{ projeto()?.observacoesExtra }}</p>
+            </div>
+          }
+        </section>
+
+        <section class="detail-card">
+          <h3 class="detail-card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            Infraestrutura Atual
+          </h3>
+          <div class="text-content">
+            <p>{{ projeto()?.infraAtual }}</p>
+          </div>
+          
+          <div class="info-group margin-top">
+            <div>
+              <label>Utiliza Nuvem</label>
+              <p>{{ projeto()?.utilizaNuvem ? 'Sim (' + projeto()?.provedorNuvem + ')' : 'Não' }}</p>
+            </div>
+            <div>
+              <label>Volumetria Estimada</label>
+              <p>{{ formatarVolume(projeto()!.volumetriaUsuarios) }}</p>
+            </div>
+          </div>
+        </section>
+
+        @if (projeto()?.notaAnalista) {
+          <section class="detail-card">
+            <h3 class="detail-card__title">Parecer Técnico Anterior</h3>
+            <div class="text-content text-content--nota">
+              <p>{{ projeto()?.notaAnalista }}</p>
+            </div>
+          </section>
+        }
+
+      </div>
+
+      @if (auth.isAdmin() || auth.isFuncionario()) {
+        <div class="detail-sidebar">
+          <div class="control-card">
+            <h4 class="control-card__title">Fluxo Operational</h4>
+            <p class="control-card__desc">Ajuste o status de acordo com a regra de transições válidas.</p>
+
+            @if (opcoesStatusDisponiveis().length === 0) {
+              <div class="status-bloqueado-aviso">
+                <p>Este projeto já se encontra em um estado final (<strong>{{ labels[projeto()!.status] }}</strong>) e não pode sofrer novas alterações de status.</p>
+              </div>
+            } @else {
+              <div class="campo">
+                <label class="campo__label" for="statusSelect">Próximo Passo</label>
+                <select id="statusSelect" class="campo__select" [ngModel]="statusSelecionado()" (ngModelChange)="statusSelecionado.set($event)">
+                  <option [value]="projeto()!.status" disabled>{{ labels[projeto()!.status] }} (Atual)</option>
+                  
+                  @for (st of opcoesStatusDisponiveis(); track st) {
+                    <option [value]="st">{{ labels[st] }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="campo margin-top-sm">
+                <label class="campo__label" for="notaAnalista">Parecer Técnico / Notas</label>
+                <textarea 
+                  id="notaAnalista" 
+                  class="campo__textarea" 
+                  [(ngModel)]="notaAnalistaInput" 
+                  rows="3" 
+                  placeholder="Insira observações ou justificativas sobre essa mudança de fase..."></textarea>
+              </div>
+
+              <button 
+                class="btn-save-status" 
+                (click)="alterarStatus()" 
+                [disabled]="salvandoStatus() || statusSelecionado() === projeto()!.status">
+                {{ salvandoStatus() ? 'Salvando...' : 'Confirmar Alteração' }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+    </div>
+
+  } @else {
+    <div class="error-box">
+      <p>Demanda não encontrada ou ID inválido.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,95 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Controle de Estoque & Ativos</h1>
+      <p class="page-subtitle">Gerencie peças, hardware e insumos técnicos com rastreabilidade de entrada.</p>
+    </div>
+  </div>
+
+  <div class="table-controls">
+    <div class="search-input-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        placeholder="Buscar por nome, SKU..." 
+        (input)="aoDigitarBusca($any($event.target).value)"
+        class="search-field"
+      >
+    </div>
+
+    <button (click)="irParaCadastro()" class="btn btn--primary">
+      + Cadastrar Item
+    </button>
+  </div>
+
+  @if (carregando()) {
+    <div class="state-container">
+      <div class="spinner"></div>
+      <p>Sincronizando com o almoxarifado...</p>
+    </div>
+  } 
+  @else if (erroMsg()) {
+    <div class="state-container state-container--error">
+      <p>{{ erroMsg() }}</p>
+      <button (click)="buscarEstoque()" class="btn btn--outline">Tentar Novamente</button>
+    </div>
+  } 
+  @else {
+    @if (estoqueService.produtosFiltrados().length === 0) {
+      <div class="state-container">
+        <p>Nenhum insumo ou produto localizado no almoxarifado.</p>
+      </div>
+    } @else {
+      <div class="table-responsive margin-top">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th style="width: 35%">SKU / Produto</th>
+              <th style="width: 15%">Categoria / Tipo</th>
+              <th style="width: 15%" class="text-end">Preço de Custo</th>
+              <th style="width: 15%" class="text-center">Qtd. Estoque</th>
+              <th style="width: 20%" class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+      @for (prod of estoqueService.produtosFiltrados(); track prod.id) {
+        <tr>
+          <td>
+            <span class="product-sku">{{ prod.codigoSku || 'SEM SKU' }}</span>
+            <span class="product-name">{{ prod.nome }}</span>
+          </td>
+          <td>
+            <span class="badge-category">{{ prod.tipoLabel || prod.tipo }}</span>
+          </td>
+          <td class="text-end font-mono">
+            {{ prod.precoVenda | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+          <td class="text-center">
+            <span class="stock-qty" [class.stock-qty--low]="prod.alertaReposicao">
+              {{ prod.quantidadeAtual }} <small>un</small>
+            </span>
+          </td>
+          <td class="text-end">
+            <div class="actions-wrapper">
+              @if (prod.alertaReposicao) {
+                <span class="status-indicator status-indicator--low">REPOSIÇÃO</span>
+              } @else {
+                <span class="status-indicator status-indicator--regular">REGULAR</span>
+              }
+              
+              <button class="btn btn--sm btn--outline" [routerLink]="[prod.id, 'movimentar']">
+                Movimentar
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

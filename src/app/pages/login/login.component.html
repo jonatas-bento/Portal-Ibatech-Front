@@ -1,0 +1,183 @@
+<!-- src/app/pages/login/login.component.html -->
+<div class="login-shell">
+
+  <!-- Painel esquerdo — Branding -->
+  <aside class="login-brand" aria-hidden="true">
+    <div class="login-brand__inner">
+      
+      <!-- LOGO HORIZONTAL INTEGRADA — DESKTOP -->
+      <div class="login-brand__logo">
+        <img src="assets/logo-parede-geral.png" alt="IBATECH Soluções Digitais" class="brand-logo-img">
+      </div>
+
+      <div class="login-brand__copy">
+        <h1>Transformação digital<br>que gera resultado.</h1>
+        <p>
+          Acesse a área restrita para gerenciar projetos,
+          estoque e operações financeiras da IBATECH Soluções Digitais.
+        </p>
+      </div>
+
+      <div class="login-brand__stats">
+        <div class="login-stat">
+          <span class="login-stat__val">500+</span>
+          <span class="login-stat__label">Projetos</span>
+        </div>
+        <div class="login-stat">
+          <span class="login-stat__val">98%</span>
+          <span class="login-stat__label">Satisfação</span>
+        </div>
+        <div class="login-stat">
+          <span class="login-stat__val">12+</span>
+          <span class="login-stat__label">Anos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grade decorativa -->
+    <div class="login-brand__grid" aria-hidden="true"></div>
+    <!-- Orbs decorativos -->
+    <div class="orb orb--green"  aria-hidden="true"></div>
+    <div class="orb orb--gold"  aria-hidden="true"></div>
+
+  </aside>
+
+  <!-- Painel direito — Formulário -->
+  <main class="login-form-panel">
+    <div class="login-form-wrap">
+
+      <!-- LOGO HORIZONTAL INTEGRADA — MOBILE -->
+      <div class="login-mobile-header">
+        <img src="assets/logo-horizontal.png" alt="IBATECH Soluções Digitais" class="brand-logo-img">
+      </div>
+
+      <div class="login-form-header">
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre com suas credenciais para acessar o painel.</p>
+      </div>
+
+      <!-- Alerta de erro -->
+      @if (erro()) {
+        <div class="login-erro" role="alert" aria-live="assertive">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 4.5v4M8 10.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          {{ erro() }}
+        </div>
+      }
+
+      <!-- Formulário -->
+      <form [formGroup]="form" (ngSubmit)="entrar()" class="login-form" novalidate>
+
+        <!-- E-mail -->
+        <div class="campo" [class.campo--erro]="temErro('email')">
+          <label class="campo__label" for="email">E-mail corporativo</label>
+          <div class="campo__input-wrap">
+            <svg class="campo__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M1 5.5l7 4.5 7-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <input
+              id="email"
+              type="email"
+              class="campo__input"
+              formControlName="email"
+              placeholder="voce@ibatech.com.br"
+              autocomplete="email"
+              [attr.aria-describedby]="temErro('email') ? 'err-email' : null"
+            />
+          </div>
+          @if (temErro('email')) {
+            <span class="campo__erro" id="err-email" role="alert">
+              @if (form.get('email')?.errors?.['required']) {
+                E-mail obrigatório.
+              } @else {
+                E-mail inválido.
+              }
+            </span>
+          }
+        </div>
+
+        <!-- Senha -->
+        <div class="campo" [class.campo--erro]="temErro('senha')">
+          <label class="campo__label" for="senha">Senha</label>
+          <div class="campo__input-wrap">
+            <svg class="campo__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <input
+              id="senha"
+              [type]="senhaVisivel() ? 'text' : 'password'"
+              class="campo__input"
+              formControlName="senha"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="campo__toggle-senha"
+              (click)="toggleSenha()"
+              [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'">
+              @if (senhaVisivel()) {
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 2l12 12M6.5 6.55A2 2 0 0 0 9.45 9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M4.2 4.2C2.8 5.1 1.8 6.4 1.5 8c.8 3 3.8 5 6.5 5 1.4 0 2.7-.5 3.8-1.2M7 3.1C7.3 3 7.7 3 8 3c2.7 0 5.7 2 6.5 5-.3 1-1 2-1.8 2.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              } @else {
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M1.5 8C2.3 5 5.3 3 8 3s5.7 2 6.5 5c-.8 3-3.8 5-6.5 5S2.3 11 1.5 8z" stroke="currentColor" stroke-width="1.4"/>
+                  <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4"/>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (temErro('senha')) {
+            <span class="campo__erro" role="alert">
+              @if (form.get('senha')?.errors?.['required']) {
+                Senha obrigatória.
+              } @else {
+                Mínimo 6 caracteres.
+              }
+            </span>
+          }
+        </div>
+
+        <!-- Botão de submit -->
+        <button
+          type="submit"
+          class="btn-entrar"
+          [disabled]="carregando()"
+          [class.btn-entrar--loading]="carregando()">
+          @if (carregando()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Entrando...
+          } @else {
+            Entrar na plataforma
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          }
+        </button>
+
+      </form>
+
+      <!-- Rodapé do formulário -->
+      <div class="login-form-footer">
+        <a routerLink="/" class="login-back-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Voltar ao site
+        </a>
+        <span class="login-form-footer__sep" aria-hidden="true">·</span>
+        <span class="login-form-footer__copy">
+          © {{ ano }} IBATECH
+        </span>
+      </div>
+
+    </div>
+  </main>
+
+</div>

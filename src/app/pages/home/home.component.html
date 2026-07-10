@@ -1,0 +1,117 @@
+<div class="home-wrapper">
+  
+  <header class="home-nav">
+    <div class="home-nav__container">
+      <div class="home-nav__logo">
+        <img src="assets/logo-parede-geral.png" alt="IBATECH Soluções Digitais" class="logo-img">
+      </div>
+      
+      <nav class="home-nav__menu" [class.home-nav__menu--open]="menuAberto()">
+        <a href="#servicos" class="btn-nav btn-nav--link" (click)="menuAberto.set(false)">Serviços</a>
+        <a href="#etapas" class="btn-nav btn-nav--link" (click)="menuAberto.set(false)">Nosso Processo</a>
+        <a routerLink="/login" class="btn-nav btn-nav--ghost">Área do Cliente</a>
+        <a routerLink="/dashboard/projetos/novo" class="btn-nav btn-nav--primary">Solicitar Análise</a>
+      </nav>
+
+      <button class="home-nav__toggle" (click)="toggleMenu()" [attr.aria-label]="menuAberto() ? 'Fechar menu' : 'Abrir menu'">
+        <span class="bar" [class.bar--open]="menuAberto()"></span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-section__container reveal">
+      <span class="hero-section__tag">Inovação & Performance B2B</span>
+      <h1 class="hero-section__title">
+        Engenharia de Infraestrutura e <br>
+        <span>Softwares que Impulsionam</span> o seu Negócio.
+      </h1>
+      <p class="hero-section__subtitle">
+        Trabalhamos no diagnóstico, arquitetura e automação de ambientes corporativos críticos. 
+        Transforme gargalos operacionais em resultados escaláveis com o time técnico da IBATECH.
+      </p>
+      <div class="hero-section__actions">
+        <a routerLink="/dashboard/projetos/novo" class="btn-hero btn-hero--primary">
+          Iniciar Diagnóstico Gratuito
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#servicos" class="btn-hero btn-hero--secondary">Conhecer Soluções</a>
+      </div>
+    </div>
+    
+    <div class="hero-section__grid" aria-hidden="true"></div>
+    <div class="orb orb--green" aria-hidden="true"></div>
+    <div class="orb orb--green-neon" aria-hidden="true"></div>
+
+  </section>
+
+  <section class="stats-section reveal">
+    <div class="stats-section__container">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-card">
+          <span class="stat-card__value">{{ stat.valor }}</span>
+          <span class="stat-card__label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section id="servicos" class="solutions-section">
+    <div class="solutions-section__container">
+      <div class="section-header reveal">
+        <h2>Nossas Especialidades</h2>
+        <p>Soluções completas para gestão de ativos, manutenção crítica e engenharia de software de grande porte.</p>
+      </div>
+
+      <div class="solutions-grid">
+        @for (srv of servicos; track srv.titulo) {
+          <div class="solution-card reveal" [class.solution-card--featured]="srv.destaque">
+            @if (srv.badge) {
+              <span class="solution-card__badge">{{ srv.badge }}</span>
+            }
+            <div class="solution-card__icon">
+              @if (srv.icone === 'hardware') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              } @else if (srv.icone === 'tools') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              }
+            </div>
+            <h3>{{ srv.titulo }}</h3>
+            <p>{{ srv.descricao }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="etapas" class="steps-section">
+    <div class="steps-section__container">
+      <div class="section-header reveal">
+        <h2>Como Trabalhamos</h2>
+        <p>A esteira de engenharia da IBATECH desenhada para mitigar riscos e garantir conformidade.</p>
+      </div>
+
+      <div class="steps-timeline">
+        @for (etapa of etapas; track etapa.num) {
+          <div class="step-item reveal">
+            <div class="step-item__number"><span>{{ etapa.num }}</span></div>
+            <div class="step-item__content">
+              <h4>{{ etapa.titulo }}</h4>
+              <p>{{ etapa.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <footer class="home-footer">
+    <div class="home-footer__container">
+      <p>© {{ ano }} IBATECH Soluções Digitais. Todos os direitos reservados.</p>
+      <small>Infraestrutura e Software com assinatura de Engenharia.</small>
+    </div>
+  </footer>
+
+</div>

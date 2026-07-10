@@ -1,0 +1,210 @@
+// src/app/pages/home/home.component.scss
+.home-wrapper {
+  background-color: #05070a;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+// ─── MECÂNICA DE REVEAL ANIMATION (INTERSECTION OBSERVER) ───
+.reveal {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Navbar Superior
+.home-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(5, 7, 10, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__logo .logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: #07090e;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 1.5rem;
+
+      &--open { display: flex; }
+    }
+  }
+
+  &__toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+
+    @media (max-width: 768px) { display: block; }
+
+    .bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      position: relative;
+      transition: all 0.2s ease;
+
+      &::before, &::after {
+        content: ''; position: absolute; width: 22px; height: 2px; background: #fff; left: 0; transition: all 0.2s ease;
+      }
+      &::before { top: -6px; }
+      &::after { top: 6px; }
+
+      &--open {
+        background: transparent;
+        &::before { transform: rotate(45deg); top: 0; }
+        &::after { transform: rotate(-45deg); top: 0; }
+      }
+    }
+  }
+}
+
+.btn-nav {
+  padding: 0.6rem 1.2rem;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &--link { color: #8c9ba5; &:hover { color: #fff; } }
+  &--ghost { color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); &:hover { background: rgba(255,255,255,0.02); } }
+  &--primary { background: var(--ib-green); color: #fff; &:hover { background: var(--ib-green-hover); } }
+
+}
+
+// Hero Section
+.hero-section {
+  position: relative;
+  padding: 12rem 1.5rem 6rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  &__container { max-width: 850px; position: relative; z-index: 5; }
+  &__tag { font-size: 11px; font-weight: 700; color: var(--ib-green-neon); text-transform: uppercase; letter-spacing: 2px; background: var(--ib-green-soft); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--ib-green-border); }
+  &__title { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; color: #ffffff; line-height: 1.15; margin-top: 1.5rem; letter-spacing: -1px; span { background: linear-gradient(90deg, var(--ib-green) 0%, var(--ib-green-neon) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } }
+  &__subtitle { font-size: 16px; color: #8c9ba5; line-height: 1.6; margin: 1.5rem auto 2.5rem auto; max-width: 680px; }
+  &__grid { position: absolute; inset: 0; z-index: 1; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(circle 60% at 50% 50%, black 20%, transparent 100%); }
+}
+
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.8rem;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &--primary { background: linear-gradient(90deg, var(--ib-green) 0%, var(--ib-green-neon) 100%); color: #fff; box-shadow: 0 4px 20px var(--ib-green-glow); &:hover { transform: translateY(-1px); box-shadow: 0 4px 25px var(--ib-green-glow); } }
+  &--secondary { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); color: #ced4da; &:hover { color: #fff; background: rgba(255,255,255,0.04); } }
+}
+
+
+// Seção de Módulos Grid (Stats)
+.stats-section {
+  padding: 2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.01);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+  &__container {
+    max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center;
+  }
+}
+
+.stat-card {
+  display: flex; flex-direction: column; gap: 0.25rem;
+  &__value { font-size: 2.2rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #fff 30%, #8c9ba5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  &__label { font-size: 13px; color: #62727d; font-weight: 500; }
+}
+
+// Seção de Serviços/Soluções
+.solutions-section {
+  padding: 7rem 1.5rem; max-width: 1200px; margin: 0 auto;
+  .section-header { text-align: center; margin-bottom: 4rem; h2 { font-size: 2rem; font-weight: 700; color: #fff; } p { color: #62727d; font-size: 14px; margin-top: 6px; } }
+}
+
+.solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+
+.solution-card {
+  background: #07090e; border: 1px solid rgba(255, 255, 255, 0.04); padding: 2.5rem 2rem; border-radius: 12px; position: relative; transition: all 0.25s ease;
+  &__icon { width: 44px; height: 44px; background: var(--ib-green-soft); color: var(--ib-green-neon); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+  h3 { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 0.75rem; }
+  p { font-size: 13.5px; color: #8c9ba5; line-height: 1.6; }
+  
+  &__badge { position: absolute; top: 1.5rem; right: 1.5rem; background: var(--ib-green-soft); color: var(--ib-green-neon); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+
+  &--featured {
+    border-color: var(--ib-green-border); background: linear-gradient(180deg, #090e17 0%, #07090e 100%);
+    box-shadow: 0 10px 30px rgba(57, 255, 20, 0.05);
+    &::before { content: ''; position: absolute; top: 0; left: 10%; width: 80%; height: 1px; background: linear-gradient(90deg, transparent, var(--ib-green-neon), transparent); }
+  }
+
+  &:hover { transform: translateY(-4px); border-color: var(--ib-green-border); background: #090c12; }
+}
+
+
+// Linha do tempo de Etapas (Processo)
+.steps-section {
+  padding: 4rem 1.5rem 8rem 1.5rem; max-width: 900px; margin: 0 auto;
+  .section-header { text-align: center; margin-bottom: 4rem; h2 { font-size: 2rem; font-weight: 700; color: #fff; } p { color: #62727d; font-size: 14px; margin-top: 6px; } }
+}
+
+.steps-timeline { display: flex; flex-direction: column; gap: 2rem; position: relative; }
+
+.step-item {
+  display: flex; gap: 1.5rem; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 10px;
+  &__number { width: 40px; height: 40px; background: #07090e; border: 1px solid rgba(255, 255, 255, 0.08); color: var(--ib-green-neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  &__content { h4 { font-size: 1.05rem; font-weight: 600; color: #fff; } p { font-size: 13.5px; color: #8c9ba5; margin-top: 4px; line-height: 1.5; } }
+}
+
+
+.home-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.03); padding: 3rem 1.5rem; text-align: center; background: #030406;
+  &__container { p { font-size: 13px; color: #62727d; } small { font-size: 11px; color: #374151; display: block; margin-top: 6px; } }
+}

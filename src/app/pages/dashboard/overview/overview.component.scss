@@ -1,0 +1,198 @@
+// Layout Geral
+.overview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.overview-header {
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+  }
+  &__subtitle {
+    font-size: 14px;
+    color: #8c9ba5;
+    margin-top: 4px;
+  }
+}
+
+// Grid de KPIs
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.card-kpi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #07090e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8c9ba5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0.4rem 0;
+    line-height: 1;
+  }
+
+  &__desc {
+    font-size: 12px;
+    color: #62727d;
+  }
+
+  &__icon-wrap {
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    color: #62727d;
+  }
+
+  &--blue {
+    border-left: 4px solid var(--ib-green);
+    .card-kpi__icon-wrap { color: var(--ib-green); background: var(--ib-green-soft); }
+  }
+  &--gold {
+    border-left: 4px solid #C9A84C;
+    .card-kpi__icon-wrap { color: #C9A84C; background: rgba(201, 168, 76, 0.1); }
+  }
+  &--cyan {
+    border-left: 4px solid var(--ib-green-neon);
+    .card-kpi__icon-wrap { color: var(--ib-green-neon); background: var(--ib-green-soft); }
+  }
+
+}
+
+// Bloco de Atividades Recentes
+.overview-recent {
+  background: #07090e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+
+  .recent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .recent-link {
+      font-size: 13px;
+      color: var(--ib-green-neon);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+
+      &:hover { color: var(--ib-green); }
+    }
+
+  }
+}
+
+// Estrutura Organizada de Tabela
+.recent-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th, td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  th {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8c9ba5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.01);
+  }
+
+  .project-company {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .project-contact {
+    display: block;
+    font-size: 12px;
+    color: #62727d;
+    margin-top: 2px;
+  }
+
+  .date-cell {
+    color: #ced4da;
+    font-size: 14px;
+  }
+
+  // Badges de Status Reativos baseados na string exata do banco
+  .badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &[data-status="Recebido"], &[data-status="RECEBIDO"] { 
+      background: rgba(98, 114, 125, 0.15); color: #8c9ba5; 
+    }
+    &[data-status="Em Análise"], &[data-status="EM_ANALISE"] { 
+      background: rgba(201, 168, 76, 0.15); color: #C9A84C; 
+    }
+    &[data-status="Aprovado"], &[data-status="APROVADO"] { 
+      background: rgba(40, 167, 69, 0.15); color: #28a745; 
+    }
+    &[data-status="Rejeitado"], &[data-status="REJEITADO"] { 
+      background: rgba(220, 53, 69, 0.15); color: #dc3545; 
+    }
+    &[data-status="Concluído"], &[data-status="CONCLUIDO"] { 
+      background: var(--ib-green-soft); color: var(--ib-green-neon); 
+    }
+
+  }
+}
+
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: #62727d;
+  font-size: 14px;
+}

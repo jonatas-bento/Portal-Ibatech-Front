@@ -1,0 +1,70 @@
+<div class="overview-container">
+  
+  <div class="overview-header">
+    <h1 class="overview-header__title">Olá, Bem-vindo ao Portal IBATECH</h1>
+    <p class="overview-header__subtitle">Aqui está o resumo operacional das suas demandas de infraestrutura e software.</p>
+  </div>
+
+  <div class="overview-grid">
+    @for (card of metrics(); track card.title) {
+      <div class="card-kpi" [ngClass]="card.colorClass">
+        <div class="card-kpi__content">
+          <span class="card-kpi__title">{{ card.title }}</span>
+          <span class="card-kpi__value">{{ card.value }}</span>
+          <span class="card-kpi__desc">{{ card.desc }}</span>
+        </div>
+        <div class="card-kpi__icon-wrap">
+          @if (card.icon === 'folder') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          } @else if (card.icon === 'clock') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="overview-recent">
+    <div class="recent-header">
+      <h3>Demandas Recentes</h3>
+      <a routerLink="/dashboard/projetos" class="recent-link">Ver todas →</a>
+    </div>
+
+    @if (ultimosProjetos().length === 0) {
+      <div class="empty-state">
+        <p>Nenhuma demanda cadastrada no momento.</p>
+      </div>
+    } @else {
+      <div class="recent-table-wrap">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th style="width: 50%">Empresa / Contato</th>
+              <th style="width: 25%">Status</th>
+              <th style="width: 25%">Criado Em</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of ultimosProjetos(); track p.id) {
+              <tr>
+                <td>
+                  <span class="project-company">{{ p.nomeEmpresa }}</span>
+                  <span class="project-contact">{{ p.nomeContato }}</span>
+                </td>
+                <td>
+                  <span class="badge-status" [attr.data-status]="p.status">
+                    {{ p.status || 'Recebido' }}
+                  </span>
+                </td>
+                <td class="date-cell">{{ p.criadoEm | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>

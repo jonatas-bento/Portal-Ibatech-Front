@@ -1,0 +1,231 @@
+// ==========================================================================
+// Layout Base e Cabeçalho
+// ==========================================================================
+.page-header {
+  margin-bottom: 2rem;
+  
+  .page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+  }
+  
+  .page-subtitle {
+    font-size: 14px;
+    color: #8c9ba5;
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+}
+
+// ==========================================================================
+// Barra de Controles (Busca + Botão)
+// ==========================================================================
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+// Input de Busca Customizado
+.search-input-wrap {
+  position: relative;
+  flex-grow: 1;
+  max-width: 400px;
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #62727d;
+    pointer-events: none;
+  }
+
+  .search-field {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    background: #07090e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #00E5FF;
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.15);
+    }
+
+    &::placeholder {
+      color: #62727d;
+    }
+  }
+}
+
+// ==========================================================================
+// Botões Globais do Componente
+// ==========================================================================
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  text-decoration: none;
+
+  &--primary {
+    background: linear-gradient(90deg, #0052D4 0%, #00E5FF 100%);
+    color: #ffffff;
+
+    &:hover {
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+      transform: translateY(-1px);
+    }
+  }
+
+  &--sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  &--outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ced4da;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      border-color: #fff;
+    }
+  }
+}
+
+// ==========================================================================
+// Tabela de Dados Responsiva
+// ==========================================================================
+.margin-top {
+  margin-top: 1.5rem;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background: #07090e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th, td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  th {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8c9ba5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.01);
+  }
+
+  // Utilitários de Alinhamento e Tipografia interna
+  .text-center { text-align: center; }
+  .text-end { text-align: right; }
+  .font-mono { font-family: monospace; color: #fff; font-size: 14px; }
+
+  // Componentes das Células de Produto
+  .product-sku {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #00E5FF;
+    text-transform: uppercase;
+  }
+
+  .product-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-top: 2px;
+  }
+
+  .badge-category {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ced4da;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .stock-qty {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+
+    small { color: #62727d; font-weight: 400; }
+    
+    &--low { color: #C9A84C; }
+  }
+
+  .actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .status-indicator {
+      font-size: 11px;
+      font-weight: 700;
+      position: relative;
+      padding-left: 12px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      &--regular {
+        color: #28a745;
+        &::before { background: #28a745; }
+      }
+
+      &--low {
+        color: #C9A84C; // Amarelo/Dourado Ibatech para avisar que está abaixo do mínimo
+        &::before { background: #C9A84C; }
+      }
+    }
+}
+}

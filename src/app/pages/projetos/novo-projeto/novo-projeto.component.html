@@ -1,0 +1,473 @@
+<!-- src/app/pages/projetos/novo-projeto/novo-projeto.component.html -->
+<h2 class="visually-hidden">Formulário de Análise de Requisitos</h2>
+
+<div class="wizard">
+
+  <!-- ── SUCESSO ──────────────────────────────────────────────────── -->
+  @if (enviado()) {
+    <div class="wizard__success" role="status" aria-live="polite">
+      <div class="wizard__success-icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" stroke="var(--ib-success)"
+                  stroke-width="2"/>
+          <path d="M14 24l7 7 13-14" stroke="var(--ib-success)"
+                stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="wizard__success-titulo">Projeto recebido!</h2>
+      <p class="wizard__success-desc">
+        Seu formulário foi enviado com sucesso. O status inicial é
+        <span class="badge badge--recebido">Recebido</span> e nossa
+        equipe técnica iniciará a análise em até 48h úteis.
+      </p>
+      <div class="wizard__success-acoes">
+        <button class="btn btn--primary" (click)="verProjeto()">
+          Ver meu projeto
+        </button>
+        <button class="btn btn--ghost" (click)="novoProjeto()">
+          Enviar outro
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ── FORMULÁRIO WIZARD ─────────────────────────────────────────── -->
+  @if (!enviado()) {
+
+    <!-- Cabeçalho + barra de progresso -->
+    <div class="wizard__header">
+      <h2 class="wizard__titulo">Análise de Requisitos</h2>
+      <p class="wizard__subtitulo">
+        Preencha as informações abaixo para iniciarmos o diagnóstico técnico do seu projeto B2B.
+      </p>
+
+      <!-- Barra de progresso -->
+      <div class="wizard__progresso" role="progressbar"
+           [attr.aria-valuenow]="progresso()"
+           aria-valuemin="0" aria-valuemax="100">
+        <div class="wizard__progresso-fill"
+             [style.width.%]="progresso()">
+        </div>
+      </div>
+
+      <!-- Steps visuais -->
+      <div class="wizard__steps" aria-label="Etapas do formulário">
+        @for (e of etapas; track e.id) {
+          <button
+            class="wizard__step"
+            [class.wizard__step--ativa]="etapaAtual() === e.id"
+            [class.wizard__step--concluida]="etapaAtual() > e.id"
+            [disabled]="etapaAtual() < e.id"
+            (click)="irParaEtapa(e.id)"
+            [attr.aria-current]="etapaAtual() === e.id ? 'step' : null"
+            [attr.aria-label]="'Etapa ' + e.id + ': ' + e.titulo">
+            <span class="wizard__step-num" aria-hidden="true">
+              @if (etapaAtual() > e.id) {
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2.5 7l3 3 6-6" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+              } @else {
+                {{ e.id }}
+              }
+            </span>
+            <span class="wizard__step-label">{{ e.titulo }}</span>
+          </button>
+          @if (!$last) {
+            <div class="wizard__step-conector"
+                 [class.wizard__step-conector--done]="etapaAtual() > e.id"
+                 aria-hidden="true">
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- ── ETAPA 1: Identificação ──────────────────────────────── -->
+    @if (etapaAtual() === 1) {
+      <div class="wizard__body" role="region" aria-label="Etapa 1: Identificação">
+        <div class="wizard__section-titulo">
+          <span class="wizard__section-tag">Etapa 01</span>
+          <h3>Quem é a empresa?</h3>
+        </div>
+
+        <form [formGroup]="form1" class="wizard__form" novalidate>
+          <div class="campo" [class.campo--erro]="temErro(form1, 'nomeEmpresa')">
+            <label class="campo__label" for="nomeEmpresa">
+              Nome da Empresa <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="nomeEmpresa"
+              type="text"
+              class="campo__input"
+              formControlName="nomeEmpresa"
+              placeholder="Ex: Acme Tecnologia Ltda"
+              autocomplete="organization"
+              [attr.aria-describedby]="temErro(form1, 'nomeEmpresa') ? 'err-empresa' : null"
+            />
+            @if (temErro(form1, 'nomeEmpresa')) {
+              <span class="campo__erro" id="err-empresa" role="alert">
+                {{ msgErro(form1, 'nomeEmpresa') }}
+              </span>
+            }
+          </div>
+
+          <div class="campo" [class.campo--erro]="temErro(form1, 'nomeContato')">
+            <label class="campo__label" for="nomeContato">
+              Nome do Responsável <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="nomeContato"
+              type="text"
+              class="campo__input"
+              formControlName="nomeContato"
+              placeholder="Ex: João da Silva"
+              autocomplete="name"
+              [attr.aria-describedby]="temErro(form1, 'nomeContato') ? 'err-contato' : null"
+            />
+            @if (temErro(form1, 'nomeContato')) {
+              <span class="campo__erro" id="err-contato" role="alert">
+                {{ msgErro(form1, 'nomeContato') }}
+              </span>
+            }
+          </div>
+
+          <div class="campo" [class.campo--erro]="temErro(form1, 'emailContato')">
+            <label class="campo__label" for="emailContato">
+              E-mail Corporativo <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="emailContato"
+              type="email"
+              class="campo__input"
+              formControlName="emailContato"
+              placeholder="joao@empresa.com.br"
+              autocomplete="email"
+              [attr.aria-describedby]="temErro(form1, 'emailContato') ? 'err-email' : null"
+            />
+            @if (temErro(form1, 'emailContato')) {
+              <span class="campo__erro" id="err-email" role="alert">
+                {{ msgErro(form1, 'emailContato') }}
+              </span>
+            }
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- ── ETAPA 2: Dores e Escopo ─────────────────────────────── -->
+    @if (etapaAtual() === 2) {
+      <div class="wizard__body" role="region" aria-label="Etapa 2: Dores e Escopo">
+        <div class="wizard__section-titulo">
+          <span class="wizard__section-tag">Etapa 02</span>
+          <h3>Quais são os desafios?</h3>
+          <p class="wizard__section-dica">
+            Descreva com detalhes: quanto mais específico, mais precisa será nossa proposta.
+          </p>
+        </div>
+
+        <form [formGroup]="form2" class="wizard__form" novalidate>
+          <div class="campo" [class.campo--erro]="temErro(form2, 'descricaoDores')">
+            <label class="campo__label" for="descricaoDores">
+              Principais dores e objetivos do projeto <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="descricaoDores"
+              class="campo__textarea"
+              formControlName="descricaoDores"
+              rows="6"
+              placeholder="Ex: Nossos processos financeiros são manuais e lentos. Precisamos de um sistema integrado que automatize os relatórios e reduza erros humanos em 80%..."
+              [attr.aria-describedby]="temErro(form2, 'descricaoDores') ? 'err-dores' : null"
+            ></textarea>
+            <div class="campo__meta">
+              @if (temErro(form2, 'descricaoDores')) {
+  <span class="text-danger">A descrição das dores é obrigatória.</span>
+}
+              <span class="campo__contador" aria-live="polite">
+                {{ ctrl(form2, 'descricaoDores').value?.length ?? 0 }} caracteres
+              </span>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label class="campo__label" for="observacoesExtra">
+              Observações adicionais
+              <span class="campo__label-opcional">(opcional)</span>
+            </label>
+            <textarea
+              id="observacoesExtra"
+              class="campo__textarea"
+              formControlName="observacoesExtra"
+              rows="3"
+              placeholder="Prazos, restrições de orçamento, integrações necessárias..."
+            ></textarea>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- ── ETAPA 3: Infraestrutura ─────────────────────────────── -->
+    @if (etapaAtual() === 3) {
+      <div class="wizard__body" role="region" aria-label="Etapa 3: Infraestrutura">
+        <div class="wizard__section-titulo">
+          <span class="wizard__section-tag">Etapa 03</span>
+          <h3>Como é o ambiente técnico hoje?</h3>
+        </div>
+
+        <form [formGroup]="form3" class="wizard__form" novalidate>
+          <div class="campo" [class.campo--erro]="temErro(form3, 'infraAtual')">
+            <label class="campo__label" for="infraAtual">
+              Descreva a infraestrutura atual <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="infraAtual"
+              class="campo__textarea"
+              formControlName="infraAtual"
+              rows="4"
+              placeholder="Ex: Servidor local Windows Server 2016, banco de dados SQL Server 2012, 3 workstations. Sistema legado em Delphi sem manutenção desde 2018..."
+            ></textarea>
+            @if (temErro(form3, 'infraAtual')) {
+              <span class="campo__erro" role="alert">
+                {{ msgErro(form3, 'infraAtual') }}
+              </span>
+            }
+          </div>
+
+          <div class="campo campo--toggle">
+            <div class="campo__toggle-wrap">
+              <label class="campo__label" for="utilizaNuvem">
+                A empresa já utiliza alguma nuvem?
+              </label>
+              <label class="toggle" aria-label="Usar nuvem">
+                <input
+                  id="utilizaNuvem"
+                  type="checkbox"
+                  class="toggle__input"
+                  formControlName="utilizaNuvem"
+                  role="switch"
+                  [attr.aria-checked]="form3.get('utilizaNuvem')?.value"
+                />
+                <span class="toggle__track" aria-hidden="true">
+                  <span class="toggle__thumb"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          @if (form3.get('utilizaNuvem')?.value) {
+            <div class="campo" [class.campo--erro]="temErro(form3, 'provedorNuvem')">
+              <label class="campo__label" for="provedorNuvem">
+                Qual provedor? <span aria-hidden="true">*</span>
+              </label>
+              <select
+                id="provedorNuvem"
+                class="campo__select"
+                formControlName="provedorNuvem">
+                <option value="">Selecione...</option>
+                <option value="AWS">Amazon AWS</option>
+                <option value="Azure">Microsoft Azure</option>
+                <option value="GCP">Google Cloud Platform</option>
+                <option value="Oracle">Oracle Cloud</option>
+                <option value="Outro">Outro</option>
+              </select>
+              @if (temErro(form3, 'provedorNuvem')) {
+                <span class="campo__erro" role="alert">
+                  {{ msgErro(form3, 'provedorNuvem') }}
+                </span>
+              }
+            </div>
+          }
+
+          <div class="campo" [class.campo--erro]="temErro(form3, 'volumetriaUsuarios')">
+            <label class="campo__label" for="volumetria">
+              Volumetria estimada de usuários <span aria-hidden="true">*</span>
+            </label>
+            <p class="campo__hint">
+              Usuários simultâneos ou cadastros totais previstos no sistema.
+            </p>
+            <input
+              id="volumetria"
+              type="number"
+              class="campo__input"
+              formControlName="volumetriaUsuarios"
+              placeholder="Ex: 500"
+              min="1"
+              max="10000000"
+            />
+            @if (temErro(form3, 'volumetriaUsuarios')) {
+              <span class="campo__erro" role="alert">
+                {{ msgErro(form3, 'volumetriaUsuarios') }}
+              </span>
+            }
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- ── ETAPA 4: Revisão e Envio ────────────────────────────── -->
+    @if (etapaAtual() === 4) {
+      <div class="wizard__body" role="region" aria-label="Etapa 4: Revisão">
+        <div class="wizard__section-titulo">
+          <span class="wizard__section-tag">Etapa 04</span>
+          <h3>Confirme as informações</h3>
+          <p class="wizard__section-dica">
+            Revise os dados antes de enviar. Você pode voltar e editar qualquer etapa.
+          </p>
+        </div>
+
+        <div class="wizard__revisao">
+
+          <section class="revisao-bloco">
+            <div class="revisao-bloco__header">
+              <h4>Identificação</h4>
+              <button class="revisao-bloco__editar" (click)="irParaEtapa(1)">
+                Editar
+              </button>
+            </div>
+            <dl class="revisao-bloco__dados">
+              <div class="revisao-bloco__linha">
+                <dt>Empresa</dt>
+                <dd>{{ form1.value.nomeEmpresa }}</dd>
+              </div>
+              <div class="revisao-bloco__linha">
+                <dt>Contato</dt>
+                <dd>{{ form1.value.nomeContato }}</dd>
+              </div>
+              <div class="revisao-bloco__linha">
+                <dt>E-mail</dt>
+                <dd>{{ form1.value.emailContato }}</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="revisao-bloco">
+            <div class="revisao-bloco__header">
+              <h4>Dores e Escopo</h4>
+              <button class="revisao-bloco__editar" (click)="irParaEtapa(2)">
+                Editar
+              </button>
+            </div>
+            <dl class="revisao-bloco__dados">
+              <div class="revisao-bloco__linha revisao-bloco__linha--full">
+                <dt>Descrição das dores</dt>
+                <dd class="revisao-bloco__texto-longo">
+                  {{ form2.value.descricaoDores }}
+                </dd>
+              </div>
+              @if (form2.value.observacoesExtra) {
+                <div class="revisao-bloco__linha revisao-bloco__linha--full">
+                  <dt>Observações</dt>
+                  <dd class="revisao-bloco__texto-longo">
+                    {{ form2.value.observacoesExtra }}
+                  </dd>
+                </div>
+              }
+            </dl>
+          </section>
+
+          <section class="revisao-bloco">
+            <div class="revisao-bloco__header">
+              <h4>Infraestrutura</h4>
+              <button class="revisao-bloco__editar" (click)="irParaEtapa(3)">
+                Editar
+              </button>
+            </div>
+            <dl class="revisao-bloco__dados">
+              <div class="revisao-bloco__linha revisao-bloco__linha--full">
+                <dt>Infra atual</dt>
+                <dd class="revisao-bloco__texto-longo">
+                  {{ form3.value.infraAtual }}
+                </dd>
+              </div>
+              <div class="revisao-bloco__linha">
+                <dt>Utiliza nuvem</dt>
+                <dd>
+                  <span class="badge"
+                        [class.badge--aprovado]="form3.value.utilizaNuvem"
+                        [class.badge--recebido]="!form3.value.utilizaNuvem">
+                    {{ form3.value.utilizaNuvem ? 'Sim' : 'Não' }}
+                  </span>
+                </dd>
+              </div>
+              @if (form3.value.utilizaNuvem && form3.value.provedorNuvem) {
+                <div class="revisao-bloco__linha">
+                  <dt>Provedor</dt>
+                  <dd>{{ form3.value.provedorNuvem }}</dd>
+                </div>
+              }
+              <div class="revisao-bloco__linha">
+                <dt>Volumetria</dt>
+                <dd>{{ formatarVolume(form3.value.volumetriaUsuarios) }}</dd>
+              </div>
+            </dl>
+          </section>
+
+          <div class="wizard__aviso-envio" role="note">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                 aria-hidden="true">
+              <circle cx="9" cy="9" r="8" stroke="var(--ib-gold)"
+                      stroke-width="1.5"/>
+              <path d="M9 5v5M9 12.5v.5"
+                    stroke="var(--ib-gold)" stroke-width="1.5"
+                    stroke-linecap="round"/>
+            </svg>
+            <p>
+              Ao enviar, seu projeto receberá o status
+              <strong>Recebido</strong> e nossa equipe iniciará a análise
+              técnica em até <strong>48h úteis</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── Navegação ──────────────────────────────────────────────── -->
+    <div class="wizard__nav">
+      @if (etapaAtual() > 1) {
+        <button class="btn btn--ghost" (click)="voltar()"
+                [disabled]="enviando()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+               aria-hidden="true">
+            <path d="M10 3L5 8l5 5" stroke="currentColor"
+                  stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          Voltar
+        </button>
+      } @else {
+        <div></div>
+      }
+
+      @if (etapaAtual() < etapas.length) {
+        <button
+  class="btn btn--primary"
+  (click)="avancar()"
+  [disabled]="!formDaEtapa(etapaAtual())?.valid"> Continuar
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+      } @else {
+        <button
+          class="btn btn--primary btn--submit"
+          (click)="enviar()"
+          [disabled]="enviando()">
+          @if (enviando()) {
+            <span class="btn__spinner" aria-hidden="true"></span>
+            Enviando...
+          } @else {
+            Enviar projeto
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                 aria-hidden="true">
+              <path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>
