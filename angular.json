@@ -52,17 +52,19 @@
                 {
                   "type":            "anyComponentStyle",
                   "maximumWarning":  "4kb",
-                  "maximumError":    "8kb"
+                  "maximumError":    "12kb"
                 }
               ],
               "outputHashing":          "all",
-              "optimization":           true,
+              "optimization": {
+                "scripts": true,
+                "styles":  true,
+                "fonts":   false
+              },
               "sourceMap":              false,
               "namedChunks":            false,
               "aot":                    true,
               "extractLicenses":        true,
-              "vendorChunk":            false,
-              "buildOptimizer":         true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

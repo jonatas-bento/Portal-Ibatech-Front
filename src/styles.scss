@@ -1,6 +1,10 @@
 // src/styles.scss
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+// Fontes carregadas via <link> no index.html (evita erro de build por inline de CSS externo)
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
+/* Garante que o corpo da página use a tipografia correta e ocupe 100% da altura */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 // ── Tokens globais ────────────────────────────────────────────────────────
 :root {
   // Paleta escura corporativa

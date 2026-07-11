@@ -2,7 +2,9 @@
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { EstoqueService } from 'src/app/services/estoque.service';
+import { ImportarProdutosComponent } from '../importar-produtos/importar-produtos.component';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -16,6 +18,7 @@ export class ListaProdutosComponent implements OnInit {
   // Injeção de Serviços
   readonly estoqueService = inject(EstoqueService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   // Estados Reativos de UI baseados em Signals
   readonly carregando = signal<boolean>(false);
@@ -49,6 +52,18 @@ export class ListaProdutosComponent implements OnInit {
    */
   irParaCadastro(): void {
     this.router.navigate(['/dashboard/estoque/novo']);
+  }
+
+  abrirImportacao(): void {
+    const dialogRef = this.dialog.open(ImportarProdutosComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.atualizarLista) {
+        this.buscarEstoque();
+      }
+    });
   }
 
   /**
