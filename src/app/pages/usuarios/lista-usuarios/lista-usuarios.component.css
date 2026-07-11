@@ -26,3 +26,21 @@
 .badge-inativo { background: rgba(255, 255, 255, 0.1); color: #aaa; }
 
 .loading, .erro, .vazio { text-align: center; padding: 40px; color: #888; }
+
+.acoes-container {
+  display: flex;
+  gap: 8px;
+}
+
+.acoes-container button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #e53e3e;
+  color: #fff;
+}

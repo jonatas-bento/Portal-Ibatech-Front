@@ -7,6 +7,8 @@ import { getRoleLabel, ROLE_OPTIONS } from '../../../core/utils/role.helper';
 import { ToastService } from '../../../services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NovoUsuarioDialogComponent } from '../novo-usuario-dialog/novo-usuario-dialog.component';
+import { EditarUsuarioDialogComponent } from '../editar-usuario-dialog/editar-usuario-dialog.component';
+import { ConfirmarStatusUsuarioDialogComponent } from '../confirmar-status-usuario-dialog/confirmar-status-usuario-dialog.component';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -72,7 +74,44 @@ export class ListaUsuariosComponent implements OnInit {
 
   abrirNovoUsuario(): void {
     this.dialog.open(NovoUsuarioDialogComponent, {
-      width: '500px'
+      panelClass: 'ibatech-user-dialog',
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      maxHeight: 'calc(100vh - 32px)',
+      autoFocus: false,
+      restoreFocus: true
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.carregarUsuarios();
+      }
+    });
+  }
+
+  abrirEditarUsuario(id: string): void {
+    this.dialog.open(EditarUsuarioDialogComponent, {
+      panelClass: 'ibatech-user-dialog',
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      maxHeight: 'calc(100vh - 32px)',
+      autoFocus: false,
+      restoreFocus: true,
+      data: { id }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.carregarUsuarios();
+      }
+    });
+  }
+
+  abrirConfirmarStatus(u: UsuarioResumo): void {
+    this.dialog.open(ConfirmarStatusUsuarioDialogComponent, {
+      panelClass: 'ibatech-user-dialog',
+      width: '440px',
+      maxWidth: 'calc(100vw - 32px)',
+      maxHeight: 'calc(100vh - 32px)',
+      autoFocus: false,
+      restoreFocus: true,
+      data: { id: u.id, nomeCompleto: u.nomeCompleto, ativo: u.ativo }
     }).afterClosed().subscribe(result => {
       if (result) {
         this.carregarUsuarios();

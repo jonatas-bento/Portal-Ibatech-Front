@@ -1,0 +1,31 @@
+<div class="usuario-dialog">
+  <h2 mat-dialog-title>Alterar minha senha</h2>
+  
+  <mat-dialog-content>
+    <p class="subtitle">Informe sua senha atual e escolha uma nova senha de acesso.</p>
+    
+    <form [formGroup]="form" (ngSubmit)="salvar()" autocomplete="off">
+      <div class="form-group">
+        <label>Senha atual</label>
+        <input [type]="mostrarSenha ? 'text' : 'password'" formControlName="senhaAtual" autocomplete="current-password">
+      </div>
+
+      <div class="form-group">
+        <label>Nova senha</label>
+        <input [type]="mostrarSenha ? 'text' : 'password'" formControlName="novaSenha" autocomplete="new-password">
+      </div>
+
+      <div class="form-group">
+        <label>Confirmar nova senha</label>
+        <input [type]="mostrarSenha ? 'text' : 'password'" formControlName="confirmarNovaSenha" autocomplete="new-password">
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || processando">
+          {{ processando ? 'Processando...' : 'Alterar senha' }}
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

@@ -40,6 +40,7 @@
           <th>E-mail</th>
           <th>Perfil</th>
           <th>Status</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +57,18 @@
             <span [class]="u.ativo ? 'badge badge-ativo' : 'badge badge-inativo'">
               {{ u.ativo ? 'Ativo' : 'Inativo' }}
             </span>
+          </td>
+          <td>
+            <div class="acoes-container">
+              <button class="btn-secondary" (click)="abrirEditarUsuario(u.id)">Editar</button>
+              <button 
+                [class]="u.ativo ? 'btn-danger' : 'btn-primary'" 
+                (click)="abrirConfirmarStatus(u)"
+                [attr.aria-label]="u.ativo ? 'Desativar usuário' : 'Ativar usuário'"
+                [title]="u.ativo ? 'Desativar usuário' : 'Ativar usuário'">
+                {{ u.ativo ? 'Desativar' : 'Ativar' }}
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

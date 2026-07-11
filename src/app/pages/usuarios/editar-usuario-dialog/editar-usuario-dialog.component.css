@@ -5,9 +5,21 @@
   border-radius: 14px;
 }
 
+.subtitle {
+  color: #a0aec0;
+  margin-bottom: 24px;
+  font-size: 0.875rem;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #a0aec0;
+}
+
 h2[mat-dialog-title] {
   margin-top: 0;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   font-size: 1.25rem;
   color: #ffffff;
 }

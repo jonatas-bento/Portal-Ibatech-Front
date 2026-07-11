@@ -6,11 +6,14 @@
   <div class="nav-right">
     <div class="user-profile">
       <div class="avatar">
-        {{ usuarioNome.charAt(0) }}
+        {{ (usuarioNome() || 'U').charAt(0) }}
       </div>
       <div class="user-info">
-        <span class="user-name">{{ usuarioNome }}</span>
-        <span class="user-role">Online</span>
+        <span class="user-name">{{ usuarioNome() }}</span>
+        <!-- <span class="user-role">{{ roleLabel }}</span> -->
+        <button type="button" class="alterar-senha-link" (click)="abrirAlterarSenha()" aria-label="Alterar minha senha" title="Alterar minha senha">
+          Alterar senha
+        </button>
       </div>
     </div>
     

@@ -1,0 +1,80 @@
+.usuario-dialog {
+  background: #11151a;
+  color: #f3f4f6;
+  padding: 24px;
+  border-radius: 14px;
+}
+
+h2[mat-dialog-title] {
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.subtitle {
+  color: #a0aec0;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #a0aec0;
+  font-size: 0.85rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  background: #181d23;
+  border: 1px solid #323a44;
+  border-radius: 6px;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #00d95f;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary {
+  background-color: #00d95f;
+  color: #050805;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  color: #050805;
+}
+
+.btn-primary:disabled {
+  background-color: #323a44;
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #323a44;
+  color: #f3f4f6;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}

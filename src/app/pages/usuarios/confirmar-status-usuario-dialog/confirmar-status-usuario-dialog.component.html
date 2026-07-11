@@ -1,0 +1,19 @@
+<div class="usuario-dialog">
+  <h2 mat-dialog-title>{{ data.ativo ? 'Desativar' : 'Ativar' }} usuário</h2>
+  
+  <mat-dialog-content>
+    <p>
+      {{ data.ativo 
+        ? 'O usuário "' + data.nomeCompleto + '" não poderá mais acessar o Portal Ibatech enquanto estiver desativado.' 
+        : 'O usuário "' + data.nomeCompleto + '" voltará a ter acesso ao Portal Ibatech conforme seu perfil.' 
+      }}
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button type="button" (click)="cancelar()" [disabled]="processando()">Cancelar</button>
+    <button type="button" (click)="confirmar()" [disabled]="processando()" [class.btn-danger]="data.ativo" [class.btn-primary]="!data.ativo">
+      {{ data.ativo ? 'Desativar usuário' : 'Ativar usuário' }}
+    </button>
+  </mat-dialog-actions>
+</div>
