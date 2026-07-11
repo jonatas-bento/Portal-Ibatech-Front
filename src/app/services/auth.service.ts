@@ -53,6 +53,12 @@ export class AuthService {
     this._role() === 'Admin' || this._role() === 'Funcionario');
   readonly isCliente     = computed(() => this._role() === 'Cliente');
 
+  // ── Helpers de Autorização ──────────────────────────────────────────
+  possuiRole(...roles: RoleUsuario[]): boolean {
+    const role = this._role();
+    return !!role && roles.includes(role);
+  }
+
   // ── Métodos públicos ────────────────────────────────────────────────
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http

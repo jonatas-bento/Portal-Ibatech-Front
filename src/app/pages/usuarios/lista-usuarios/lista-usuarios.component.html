@@ -1,3 +1,69 @@
-<p>
-  lista-usuarios works!
-</p>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>Controle de Usuários</h1>
+      <p>Gerencie os usuários, acessos e perfis do Portal Ibatech.</p>
+    </div>
+    <button class="btn-primary" (click)="abrirNovoUsuario()">Novo usuário</button>
+  </header>
+
+  <section class="filtros-card">
+    <div class="filtros-grid">
+      <input type="text" [(ngModel)]="filtroNome" placeholder="Buscar por nome ou e-mail" (keyup.enter)="carregarUsuarios()">
+      
+      <select [(ngModel)]="filtroRole">
+        <option value="">Todos os perfis</option>
+        <option *ngFor="let role of roleOptions" [value]="role.value">{{ role.label }}</option>
+      </select>
+
+      <select [(ngModel)]="filtroAtivo">
+        <option [ngValue]="undefined">Todos os status</option>
+        <option [ngValue]="true">Ativos</option>
+        <option [ngValue]="false">Inativos</option>
+      </select>
+    </div>
+    <div class="filtros-actions">
+      <button class="btn-primary" (click)="carregarUsuarios()">Filtrar</button>
+      <button class="btn-secondary" (click)="limparFiltros()">Limpar filtros</button>
+    </div>
+  </section>
+
+  <div *ngIf="carregando()" class="loading">Carregando...</div>
+
+  <div *ngIf="!carregando() && erroMsg()" class="erro">{{ erroMsg() }}</div>
+
+  <div class="tabela-container" *ngIf="!carregando() && usuarios().length > 0">
+    <table class="tabela-usuarios">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>E-mail</th>
+          <th>Perfil</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios()">
+          <td class="col-usuario">
+            <div class="avatar">{{ u.nomeCompleto.charAt(0).toUpperCase() }}</div>
+            <div class="info">
+              <span class="nome">{{ u.nomeCompleto }}</span>
+            </div>
+          </td>
+          <td>{{ u.email }}</td>
+          <td>{{ getRoleLabel(u.role) }}</td>
+          <td>
+            <span [class]="u.ativo ? 'badge badge-ativo' : 'badge badge-inativo'">
+              {{ u.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!carregando() && usuarios().length === 0 && !erroMsg()" class="vazio">
+    <h3>Nenhum usuário encontrado</h3>
+    <p>Não há usuários correspondentes aos filtros informados.</p>
+  </div>
+</div>

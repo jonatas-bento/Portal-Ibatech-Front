@@ -1,0 +1,40 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Novo Usuário</h2>
+  <form [formGroup]="form" (ngSubmit)="cadastrar()">
+    <mat-dialog-content>
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input formControlName="nomeCompleto" type="text" placeholder="Nome completo">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input formControlName="email" type="email" placeholder="E-mail">
+      </div>
+      <div class="form-group">
+        <label>Telefone</label>
+        <input formControlName="telefone" type="text" placeholder="Telefone">
+      </div>
+      <div class="form-group">
+        <label>CPF</label>
+        <input formControlName="cpf" type="text" placeholder="CPF">
+      </div>
+      <div class="form-group">
+        <label>Perfil</label>
+        <select formControlName="role">
+          <option value="" disabled>Selecione um perfil</option>
+          <option *ngFor="let opt of roleOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input formControlName="senha" type="password" placeholder="Senha">
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button type="button" (click)="cancelar()" [disabled]="enviando()">Cancelar</button>
+      <button type="submit" [disabled]="form.invalid || enviando()">
+        {{ enviando() ? 'Cadastrando...' : 'Cadastrar usuário' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

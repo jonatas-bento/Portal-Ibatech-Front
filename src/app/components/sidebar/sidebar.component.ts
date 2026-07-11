@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service'; // Ajustado o caminho relativo baseado na sua árvore
+import { getRoleLabel } from '../../core/utils/role.helper';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,6 +14,7 @@ import { AuthService } from '../../services/auth.service'; // Ajustado o caminho
 export class SidebarComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  readonly getRoleLabel = getRoleLabel;
 
   logout(): void {
     this.auth.logout();

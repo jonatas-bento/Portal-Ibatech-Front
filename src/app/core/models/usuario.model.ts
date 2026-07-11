@@ -1,22 +1,59 @@
-// src/app/core/models/usuario.models.ts
-export type RoleUsuario = 'Admin' | 'Funcionario' | 'Cliente';
+// src/app/core/models/usuario.model.ts
+export type RoleUsuario =
+  | 'Admin'
+  | 'Funcionario'
+  | 'Cliente'
+  | 'Vendedor'
+  | 'Estoque'
+  | 'Financeiro';
 
-export interface UsuarioResponse {
-  id:           string;
+export interface UsuarioResumo {
+  id: string;
   nomeCompleto: string;
-  email:        string;
-  telefone?:    string;
-  cpf?:         string;
-  role:         RoleUsuario;
-  ativo:        boolean;
-  criadoEm:     string;
+  email: string;
+  role: RoleUsuario;
+  ativo: boolean;
 }
 
-export interface UsuarioCreateRequest {
+export interface UsuarioDetalhe extends UsuarioResumo {
+  telefone?: string;
+  cpf?: string;
+  criadoEm: string;
+}
+
+export interface CriarUsuarioRequest {
   nomeCompleto: string;
-  email:        string;
-  senha:        string;
-  role:         RoleUsuario;
-  telefone?:    string;
-  cpf?:         string;
+  email: string;
+  senha: string;
+  role: RoleUsuario;
+  telefone?: string;
+  cpf?: string;
+}
+
+export interface AtualizarUsuarioRequest {
+  nomeCompleto: string;
+  email: string;
+  role: RoleUsuario;
+  telefone?: string;
+  cpf?: string;
+}
+
+export interface AlterarStatusUsuarioRequest {
+  ativo: boolean;
+}
+
+export interface RedefinirSenhaUsuarioRequest {
+  novaSenha: string;
+}
+
+export interface AlterarMinhaSenhaRequest {
+  senhaAtual: string;
+  novaSenha: string;
+}
+
+export interface UsuarioFiltros {
+  nome?: string;
+  email?: string;
+  role?: RoleUsuario;
+  ativo?: boolean;
 }
