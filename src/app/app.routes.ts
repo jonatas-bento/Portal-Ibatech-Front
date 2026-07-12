@@ -100,6 +100,15 @@ export const routes: Routes = [
             .then(m => m.ListaUsuariosComponent),
         title: 'Usuários — IBATECH',
       },
+      {
+        path:        'clientes',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Vendedor'] },
+        loadComponent: () =>
+          import('./pages/clientes/lista-clientes/lista-clientes.component')
+            .then(m => m.ListaClientesComponent),
+        title: 'Clientes — IBATECH',
+      },
     ],
   },
   {

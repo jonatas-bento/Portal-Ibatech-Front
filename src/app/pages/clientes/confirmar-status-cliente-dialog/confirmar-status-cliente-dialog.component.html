@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Alterar status do cliente</h2>
+<mat-dialog-content>
+  <p>Tem certeza que deseja {{ data.cliente.ativo ? 'desativar' : 'ativar' }} o cliente <strong>{{ data.cliente.nome }}</strong>?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" (click)="cancelar()" class="btn-cancel">Cancelar</button>
+  <button type="button" (click)="confirmar()" [disabled]="loading" class="btn-save">Confirmar</button>
+</mat-dialog-actions>

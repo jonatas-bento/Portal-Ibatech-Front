@@ -1,0 +1,76 @@
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>Clientes</h1>
+      <p>Gerencie os clientes e contatos comerciais da Ibatech.</p>
+    </div>
+    <button class="btn-primary" (click)="abrirNovoCliente()">Novo cliente</button>
+  </header>
+
+  <section class="filtros-card">
+    <div class="filtros-grid">
+      <input type="text" [(ngModel)]="filtros.texto" placeholder="Buscar por nome, CPF/CNPJ, e-mail ou telefone">
+      
+      <select [(ngModel)]="filtros.ativo">
+        <option [ngValue]="undefined">Todos os status</option>
+        <option [ngValue]="true">Ativos</option>
+        <option [ngValue]="false">Inativos</option>
+      </select>
+    </div>
+    <div class="filtros-actions">
+      <button class="btn-primary" (click)="filtrar()">Filtrar</button>
+      <button class="btn-secondary" (click)="limparFiltros()">Limpar filtros</button>
+    </div>
+  </section>
+
+  <div class="tabela-container" *ngIf="clientes.length > 0">
+    <table class="tabela-usuarios">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Documento</th>
+          <th>Contato</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td class="col-usuario">
+            <div class="avatar">{{ cliente.nome.charAt(0).toUpperCase() }}</div>
+            <div class="info">
+              <span class="nome">{{ cliente.nome }}</span>
+              <div *ngIf="cliente.endereco" class="endereco">{{ cliente.endereco }}</div>
+            </div>
+          </td>
+          <td>{{ cliente.cpfCnpj || 'Não informado' }}</td>
+          <td>
+            <div *ngIf="cliente.email">{{ cliente.email }}</div>
+            <div *ngIf="cliente.telefone">{{ cliente.telefone }}</div>
+          </td>
+          <td>
+            <span [class]="'badge ' + (cliente.ativo ? 'badge-ativo' : 'badge-inativo')">
+              {{ cliente.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td>
+            <div class="acoes-container">
+              <button class="btn-secondary" (click)="abrirEditarCliente(cliente)" title="Editar">Editar</button>
+              <button 
+                [class]="cliente.ativo ? 'btn-danger' : 'btn-primary'" 
+                (click)="abrirConfirmarStatus(cliente)"
+                [title]="cliente.ativo ? 'Desativar' : 'Ativar'">
+                {{ cliente.ativo ? 'Desativar' : 'Ativar' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="clientes.length === 0 && !loading" class="vazio">
+    <h3>{{ filtros.texto || filtros.ativo !== undefined ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado' }}</h3>
+    <p>{{ filtros.texto || filtros.ativo !== undefined ? 'Não há clientes correspondentes aos filtros informados.' : 'Os clientes comerciais cadastrados aparecerão aqui.' }}</p>
+  </div>
+</div>

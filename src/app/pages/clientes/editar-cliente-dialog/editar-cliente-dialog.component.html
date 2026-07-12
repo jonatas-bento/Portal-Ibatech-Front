@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Editar cliente</h2>
+<mat-dialog-content>
+  <p class="subtitle">Atualize os dados comerciais e de contato deste cliente.</p>
+  <form [formGroup]="form" (ngSubmit)="atualizar()">
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input id="nome" formControlName="nome" type="text" placeholder="Nome do cliente">
+    </div>
+    <div class="form-group">
+      <label for="cpfCnpj">CPF/CNPJ</label>
+      <input id="cpfCnpj" formControlName="cpfCnpj" type="text" placeholder="000.000.000-00 ou 00.000.000/0000-00">
+    </div>
+    <div class="form-group">
+      <label for="telefone">Telefone</label>
+      <input id="telefone" formControlName="telefone" type="text" placeholder="(00) 00000-0000">
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input id="email" formControlName="email" type="email" placeholder="email@exemplo.com">
+    </div>
+    <div class="form-group">
+      <label for="endereco">Endereço</label>
+      <input id="endereco" formControlName="endereco" type="text" placeholder="Endereço completo">
+    </div>
+    <div class="form-group">
+      <label for="observacao">Observação</label>
+      <textarea id="observacao" formControlName="observacao" placeholder="Observações adicionais"></textarea>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" (click)="cancelar()" class="btn-cancel">Cancelar</button>
+  <button type="button" (click)="atualizar()" [disabled]="form.invalid" class="btn-save">Salvar alterações</button>
+</mat-dialog-actions>

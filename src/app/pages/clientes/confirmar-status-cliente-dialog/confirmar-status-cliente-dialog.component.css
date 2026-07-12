@@ -1,0 +1,35 @@
+.btn-cancel {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+h2[mat-dialog-title] {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+
+p{
+  margin-bottom: 24px;
+  color: #a0aec0;
+  font-size: 0.875rem;
+}
+
+.btn-save {
+  background: #00ff00;
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.btn-save:disabled {
+  background: #555;
+  color: #ccc;
+}

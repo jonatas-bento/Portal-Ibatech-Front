@@ -1,0 +1,54 @@
+<div class="cliente-dialog">
+  <div class="dialog-header">
+    <h2>Novo cliente</h2>
+    <p>Cadastre um cliente e seus dados de contato comercial.</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="cadastrar()">
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" formControlName="nome" autocomplete="name" [class.invalid]="form.get('nome')?.invalid && form.get('nome')?.touched">
+      @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
+        <span class="error-message">Nome é obrigatório (máx. 150 caracteres).</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="cpfCnpj">CPF/CNPJ</label>
+      <input id="cpfCnpj" type="text" formControlName="cpfCnpj" [class.invalid]="form.get('cpfCnpj')?.invalid && form.get('cpfCnpj')?.touched">
+      @if (form.get('cpfCnpj')?.invalid && form.get('cpfCnpj')?.touched) {
+        <span class="error-message">CPF (11 dígitos) ou CNPJ (14 dígitos) inválido.</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="telefone">Telefone</label>
+      <input id="telefone" type="text" formControlName="telefone" autocomplete="tel">
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched">
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+        <span class="error-message">E-mail inválido.</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="endereco">Endereço</label>
+      <input id="endereco" type="text" formControlName="endereco" autocomplete="street-address">
+    </div>
+
+    <div class="form-group">
+      <label for="observacao">Observação</label>
+      <textarea id="observacao" formControlName="observacao" rows="3"></textarea>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn-cancel" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-save" [disabled]="form.invalid || loading">
+        {{ loading ? 'Cadastrando...' : 'Cadastrar cliente' }}
+      </button>
+    </div>
+  </form>
+</div>
