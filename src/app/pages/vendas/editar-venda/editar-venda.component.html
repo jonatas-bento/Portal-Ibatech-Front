@@ -1,0 +1,74 @@
+<div class="loading-container" *ngIf="loading">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Carregando venda...</p>
+</div>
+
+<div class="page-container" *ngIf="!loading && venda">
+  <div class="page-header">
+    <h1>Venda: {{ venda.numero }}</h1>
+    <div class="actions">
+      <button mat-button type="button" (click)="voltar()">
+        Voltar
+      </button>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <p><strong>Número:</strong> {{ venda.numero }}</p>
+    <p><strong>Status:</strong> {{ venda.status }}</p>
+    <p><strong>Vendedor:</strong> {{ venda.vendedorNome }}</p>
+    <p><strong>Data Venda:</strong> {{ venda.dataVenda | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Criado em:</strong> {{ venda.criadoEm | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Atualizado em:</strong> {{ (venda.atualizadoEm | date:'dd/MM/yyyy HH:mm') || 'Não atualizado' }}</p>
+    <p><strong>Valor Bruto:</strong> {{ venda.valorBruto | currency:'BRL' }}</p>
+    <p><strong>Desconto:</strong> {{ venda.desconto | currency:'BRL' }}</p>
+    <p><strong>Valor Total:</strong> {{ venda.valorTotal | currency:'BRL' }}</p>
+    <p><strong>Quantidade de itens:</strong> {{ venda.itens.length }}</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()">
+    <mat-form-field appearance="outline">
+      <mat-label>Cliente</mat-label>
+      <mat-select formControlName="clienteId">
+        <mat-option [value]="null">Nenhum</mat-option>
+        <mat-option *ngFor="let c of clientes" [value]="c.id">{{ c.nome }} ({{ c.cpfCnpj }})</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Observação</mat-label>
+      <textarea matInput formControlName="observacao"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
+    </button>
+  </form>
+
+  <h3>Itens</h3>
+  <table class="data-table" *ngIf="venda.itens.length > 0; else noItems">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preço unitário</th>
+        <th>Desconto</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of venda.itens">
+        <td>{{ item.codigoSku }}</td>
+        <td>{{ item.nomeProduto }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>{{ item.precoUnitario | currency:'BRL' }}</td>
+        <td>{{ item.desconto | currency:'BRL' }}</td>
+        <td>{{ item.valorTotal | currency:'BRL' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #noItems>
+    <p>Nenhum produto adicionado.</p>
+  </ng-template>
+</div>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { VendaService } from '../../../services/venda.service';
 import { VendaResumo, VendaFiltro } from '../../../core/models/venda.model';
 import { ToastService } from '../../../services/toast.service';
@@ -9,7 +11,7 @@ import { LoadingService } from '../../../services/loading.service';
 @Component({
   selector: 'app-lista-vendas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './lista-vendas.component.html',
   styleUrls: ['./lista-vendas.component.css']
 })
@@ -24,7 +26,8 @@ export class ListaVendasComponent implements OnInit {
   constructor(
     private vendaService: VendaService,
     private toastService: ToastService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -56,17 +59,22 @@ export class ListaVendasComponent implements OnInit {
   }
 
   criarNovaVenda(): void {
+    if (this.criandoVenda) {
+      return;
+    }
+
     this.criandoVenda = true;
-    this.vendaService.criar({}).subscribe({
-      next: () => {
-        this.toastService.success('Rascunho criado com sucesso.');
-        this.carregarVendas();
-        this.criandoVenda = false;
-      },
-      error: () => {
-        this.toastService.error('Não foi possível criar o rascunho.');
-        this.criandoVenda = false;
-      }
-    });
+
+    this.vendaService.criar({})
+      .pipe(finalize(() => this.criandoVenda = false))
+      .subscribe({
+        next: (venda) => {
+          this.toastService.success('Rascunho criado com sucesso.');
+          this.router.navigate(['/dashboard/vendas', venda.id]);
+        },
+        error: () => {
+          this.toastService.error('Não foi possível criar o rascunho.');
+        }
+      });
   }
 }

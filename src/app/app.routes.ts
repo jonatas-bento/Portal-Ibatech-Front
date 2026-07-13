@@ -70,6 +70,13 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/vendas/lista-vendas/lista-vendas.component').then(m => m.ListaVendasComponent),
         title: 'Vendas — IBATECH',
       },
+      {
+        path:        'vendas/:id',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Vendedor'] },
+        loadComponent: () => import('./pages/vendas/editar-venda/editar-venda.component').then(m => m.EditarVendaComponent),
+        title: 'Editar Venda — IBATECH',
+      },
     ],
   },
   {

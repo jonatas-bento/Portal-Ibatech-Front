@@ -48,7 +48,7 @@
               <td>{{ venda.desconto | currency:'BRL' }}</td>
               <td>{{ venda.valorTotal | currency:'BRL' }}</td>
               <td>
-                <button class="btn-icon">Editar</button>
+                <button class="btn-icon" [routerLink]="['/dashboard/vendas', venda.id]">Editar</button>
               </td>
             </tr>
           }
