@@ -1,74 +1,125 @@
-<div class="loading-container" *ngIf="loading">
-  <mat-spinner diameter="40"></mat-spinner>
-  <p>Carregando venda...</p>
-</div>
-
-<div class="page-container" *ngIf="!loading && venda">
-  <div class="page-header">
-    <h1>Venda: {{ venda.numero }}</h1>
-    <div class="actions">
-      <button mat-button type="button" (click)="voltar()">
-        Voltar
+<div class="page-container editor-venda-container">
+  @if (loading) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando venda...</p>
+    </div>
+  } @else if (venda) {
+    <div class="page-header">
+      <div class="header-titles">
+        <h1>Venda: {{ venda.numero }}</h1>
+        <p class="subtitle">Edição do rascunho da venda</p>
+        <mat-chip-set><mat-chip>Rascunho</mat-chip></mat-chip-set>
+      </div>
+      <button mat-button type="button" class="btn-brand-secondary" (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon> Voltar
       </button>
     </div>
-  </div>
 
-  <div class="info-grid">
-    <p><strong>Número:</strong> {{ venda.numero }}</p>
-    <p><strong>Status:</strong> {{ venda.status }}</p>
-    <p><strong>Vendedor:</strong> {{ venda.vendedorNome }}</p>
-    <p><strong>Data Venda:</strong> {{ venda.dataVenda | date:'dd/MM/yyyy HH:mm' }}</p>
-    <p><strong>Criado em:</strong> {{ venda.criadoEm | date:'dd/MM/yyyy HH:mm' }}</p>
-    <p><strong>Atualizado em:</strong> {{ (venda.atualizadoEm | date:'dd/MM/yyyy HH:mm') || 'Não atualizado' }}</p>
-    <p><strong>Valor Bruto:</strong> {{ venda.valorBruto | currency:'BRL' }}</p>
-    <p><strong>Desconto:</strong> {{ venda.desconto | currency:'BRL' }}</p>
-    <p><strong>Valor Total:</strong> {{ venda.valorTotal | currency:'BRL' }}</p>
-    <p><strong>Quantidade de itens:</strong> {{ venda.itens.length }}</p>
-  </div>
+    <div class="resumo-grid">
+      <div class="card">
+        <label>Número</label>
+        <p>{{ venda.numero }}</p>
+      </div>
+      <div class="card">
+        <label>Status</label>
+        <p>{{ venda.status }}</p>
+      </div>
+      <div class="card">
+        <label>Vendedor</label>
+        <p>{{ venda.vendedorNome }}</p>
+      </div>
+      <div class="card">
+        <label>Data da venda</label>
+        <p>{{ venda.dataVenda | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <div class="card">
+        <label>Criado em</label>
+        <p>{{ venda.criadoEm | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <div class="card">
+        <label>Atualizado em</label>
+        <p>{{ venda.atualizadoEm ? (venda.atualizadoEm | date:'dd/MM/yyyy HH:mm') : 'Não atualizado' }}</p>
+      </div>
+      <div class="card">
+        <label>Valor bruto</label>
+        <p>{{ venda.valorBruto | currency:'BRL':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="card">
+        <label>Desconto</label>
+        <p>{{ venda.desconto | currency:'BRL':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="card">
+        <label>Valor total</label>
+        <p class="font-bold">{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="card">
+        <label>Quantidade de itens</label>
+        <p>{{ venda.itens.length }}</p>
+      </div>
+    </div>
 
-  <form [formGroup]="form" (ngSubmit)="salvar()">
-    <mat-form-field appearance="outline">
-      <mat-label>Cliente</mat-label>
-      <mat-select formControlName="clienteId">
-        <mat-option [value]="null">Nenhum</mat-option>
-        <mat-option *ngFor="let c of clientes" [value]="c.id">{{ c.nome }} ({{ c.cpfCnpj }})</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="card form-card ib-dark-form">
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <mat-select formControlName="clienteId">
+            <mat-option [value]="null">Selecione um cliente</mat-option>
+            @for (cliente of clientes; track cliente.id) {
+              <mat-option [value]="cliente.id">{{ cliente.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Observação</mat-label>
-      <textarea matInput formControlName="observacao"></textarea>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Observação</mat-label>
+          <textarea matInput formControlName="observacao" rows="3"></textarea>
+        </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="salvando">
-      {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
-    </button>
-  </form>
+        <div class="form-actions">
+          <button mat-raised-button type="submit" class="btn-brand-primary" [disabled]="salvando || form.invalid">
+            <mat-icon>save</mat-icon> {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
+          </button>
+        </div>
+      </form>
+    </div>
 
-  <h3>Itens</h3>
-  <table class="data-table" *ngIf="venda.itens.length > 0; else noItems">
-    <thead>
-      <tr>
-        <th>SKU</th>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Preço unitário</th>
-        <th>Desconto</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of venda.itens">
-        <td>{{ item.codigoSku }}</td>
-        <td>{{ item.nomeProduto }}</td>
-        <td>{{ item.quantidade }}</td>
-        <td>{{ item.precoUnitario | currency:'BRL' }}</td>
-        <td>{{ item.desconto | currency:'BRL' }}</td>
-        <td>{{ item.valorTotal | currency:'BRL' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <ng-template #noItems>
-    <p>Nenhum produto adicionado.</p>
-  </ng-template>
+    <div class="card">
+      <h2>Itens da venda</h2>
+      @if (venda.itens.length === 0) {
+        <div class="empty-state">
+          <mat-icon>inventory_2</mat-icon>
+          <p>Nenhum produto adicionado.</p>
+          <p class="subtitle">Os produtos serão gerenciados posteriormente.</p>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço unitário</th>
+                <th>Desconto</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of venda.itens; track item.produtoId) {
+                <tr>
+                  <td>{{ item.codigoSku }}</td>
+                  <td>{{ item.nomeProduto }}</td>
+                  <td>{{ item.quantidade }}</td>
+                  <td>{{ item.precoUnitario | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td>{{ item.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td>{{ item.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
 </div>

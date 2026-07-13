@@ -1,26 +1,60 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>Vendas</h1>
-    <p class="subtitle">Gerenciamento de vendas em rascunho</p>
-    <button class="btn-primary" (click)="criarNovaVenda()" [disabled]="criandoVenda">
+    <div class="header-titles">
+      <h1>Vendas</h1>
+      <p class="subtitle">Gerenciamento de vendas em rascunho</p>
+    </div>
+    <button mat-raised-button class="btn-brand-primary" (click)="criarNovaVenda()" [disabled]="criandoVenda">
+      <mat-icon>add_shopping_cart</mat-icon>
       {{ criandoVenda ? 'Criando...' : 'Nova venda' }}
     </button>
   </div>
 
-  <div class="filters-container">
-    <input type="text" [(ngModel)]="filtros.numero" placeholder="Número da venda">
-    <input type="text" [(ngModel)]="filtros.status" placeholder="Status">
-    <input type="date" [(ngModel)]="filtros.dataInicial" placeholder="Data inicial">
-    <input type="date" [(ngModel)]="filtros.dataFinal" placeholder="Data final">
-    <button class="btn-secondary" (click)="filtrar()">Filtrar</button>
-    <button class="btn-outline" (click)="limparFiltros()">Limpar</button>
+  <div class="filters-container ib-dark-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Número</mat-label>
+      <input matInput [(ngModel)]="filtros.numero" placeholder="Número">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="filtros.status">
+        <mat-option value="Rascunho">Rascunho</mat-option>
+        <mat-option value="Finalizada">Finalizada</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data inicial</mat-label>
+      <input matInput type="date" [(ngModel)]="filtros.dataInicial">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data final</mat-label>
+      <input matInput type="date" [(ngModel)]="filtros.dataFinal">
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-raised-button class="btn-brand-primary" (click)="filtrar()">
+        <mat-icon>search</mat-icon> Filtrar
+      </button>
+      <button mat-stroked-button class="btn-brand-secondary" (click)="limparFiltros()">
+        <mat-icon>filter_alt_off</mat-icon> Limpar
+      </button>
+    </div>
   </div>
 
   <div class="table-container">
     @if (loading) {
-      <div class="loading-state">Carregando...</div>
+      <div class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Carregando vendas...</p>
+      </div>
     } @else if (vendas.length === 0) {
-      <div class="empty-state">Nenhuma venda encontrada.</div>
+      <div class="empty-state">
+        <mat-icon>receipt_long</mat-icon>
+        <p>Nenhuma venda encontrada.</p>
+      </div>
     } @else {
       <table class="data-table">
         <thead>
@@ -30,25 +64,27 @@
             <th>Vendedor</th>
             <th>Status</th>
             <th>Itens</th>
-            <th>Valor Bruto</th>
-            <th>Desconto</th>
-            <th>Total</th>
-            <th>Ações</th>
+            <th class="text-right">Valor Bruto</th>
+            <th class="text-right">Desconto</th>
+            <th class="text-right">Total</th>
+            <th class="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
           @for (venda of vendas; track venda.id) {
             <tr>
-              <td>{{ venda.numero }}</td>
-              <td>{{ venda.dataVenda | date:'dd/MM/yyyy' }}</td>
+              <td class="nowrap">{{ venda.numero }}</td>
+              <td class="nowrap">{{ venda.dataVenda | date:'dd/MM/yyyy' }}</td>
               <td>{{ venda.vendedorNome }}</td>
-              <td><span class="chip">{{ venda.status }}</span></td>
+              <td><mat-chip-set><mat-chip>{{ venda.status }}</mat-chip></mat-chip-set></td>
               <td>{{ venda.quantidadeItens }}</td>
-              <td>{{ venda.valorBruto | currency:'BRL' }}</td>
-              <td>{{ venda.desconto | currency:'BRL' }}</td>
-              <td>{{ venda.valorTotal | currency:'BRL' }}</td>
-              <td>
-                <button class="btn-icon" [routerLink]="['/dashboard/vendas', venda.id]">Editar</button>
+              <td class="text-right nowrap">{{ venda.valorBruto | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="text-right nowrap">{{ venda.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="text-right nowrap font-bold">{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="text-center">
+                <button mat-icon-button class="btn-icon-edit" [routerLink]="['/dashboard/vendas', venda.id]" matTooltip="Abrir venda">
+                  <mat-icon>edit</mat-icon>
+                </button>
               </td>
             </tr>
           }

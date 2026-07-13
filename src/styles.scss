@@ -1,6 +1,7 @@
 // src/styles.scss
 // Fontes carregadas via <link> no index.html (evita erro de build por inline de CSS externo)
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'styles/ibatech-tokens';
 
 /* Garante que o corpo da página use a tipografia correta e ocupe 100% da altura */
 html, body { height: 100%; }
@@ -22,7 +23,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --ib-blue-border: rgba(57, 255, 20, 0.18);
 
   // Aliases semânticos da nova identidade (verde)
-  --ib-green:         #00D95F;
+  --ib-green:         #00e676;
   --ib-green-neon:    #39FF14;
   --ib-green-dark:    #00A84F;
   --ib-green-hover:   #2EEA62;

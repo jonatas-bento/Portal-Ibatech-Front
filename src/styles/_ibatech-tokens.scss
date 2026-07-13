@@ -1,0 +1,76 @@
+// src/styles/_ibatech-tokens.scss
+// Tokens visuais oficiais do Portal Ibatech.
+// Novas telas administrativas devem utilizar estas variáveis para garantir consistência.
+
+:root {
+  // Cores de Fundo
+  --ib-page-bg: #0A0C10;
+  --ib-surface: #1a1a1a;
+  --ib-surface-raised: #222;
+  --ib-control-bg: #222;
+
+  // Bordas
+  --ib-border: #333;
+  --ib-border-focus: #00ff00;
+
+  // Texto
+  --ib-text-primary: #fff;
+  --ib-text-secondary: #888;
+  --ib-text-disabled: #aaa;
+
+  // Marca (Verde Oficial)
+  --ib-brand: #00ff00;
+  --ib-brand-hover: #00cc00; // Ajuste para hover visível
+  --ib-brand-soft: rgba(0, 255, 0, 0.1);
+
+  // Semânticas
+  --ib-danger: #e53e3e;
+
+  // Layout
+  --ib-radius-sm: 4px;
+  --ib-radius-md: 8px;
+  --ib-radius-lg: 16px;
+
+  // Sombra
+  --ib-shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.ib-dark-form {
+  --mdc-outlined-text-field-input-text-color: var(--ib-text-primary);
+  --mdc-outlined-text-field-label-text-color: var(--ib-text-secondary);
+  --mdc-outlined-text-field-hover-label-text-color: var(--ib-text-primary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--ib-brand);
+  --mdc-outlined-text-field-outline-color: var(--ib-border);
+  --mdc-outlined-text-field-hover-outline-color: var(--ib-text-secondary);
+  --mdc-outlined-text-field-focus-outline-color: var(--ib-brand);
+  --mdc-outlined-text-field-caret-color: var(--ib-brand);
+  --mdc-outlined-text-field-disabled-input-text-color: var(--ib-text-disabled);
+  --mdc-outlined-text-field-disabled-label-text-color: var(--ib-text-disabled);
+}
+
+.ib-dark-form input.mat-mdc-input-element,
+.ib-dark-form textarea.mat-mdc-input-element {
+  color: var(--ib-text-primary) !important;
+  -webkit-text-fill-color: var(--ib-text-primary) !important;
+  caret-color: var(--ib-brand);
+}
+
+.ib-dark-form input.mat-mdc-input-element::placeholder,
+.ib-dark-form textarea.mat-mdc-input-element::placeholder {
+  color: var(--ib-text-secondary) !important;
+  -webkit-text-fill-color: var(--ib-text-secondary) !important;
+  opacity: 1;
+}
+
+.ib-dark-form .mat-mdc-select-value,
+.ib-dark-form .mat-mdc-select-value-text {
+  color: var(--ib-text-primary) !important;
+}
+
+.ib-dark-form .mat-mdc-select-arrow {
+  color: var(--ib-text-secondary) !important;
+}
+
+.ib-dark-form input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}

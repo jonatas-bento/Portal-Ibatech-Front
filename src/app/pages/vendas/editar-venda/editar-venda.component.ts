@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 import { finalize } from 'rxjs/operators';
 import { VendaService } from '../../../services/venda.service';
 import { ClienteService } from '../../../services/cliente.service';
@@ -24,7 +26,9 @@ import { ToastService } from '../../../services/toast.service';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatIconModule
   ],
   templateUrl: './editar-venda.component.html',
   styleUrls: ['./editar-venda.component.css']

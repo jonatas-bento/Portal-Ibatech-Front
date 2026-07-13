@@ -1,54 +1,127 @@
-.loading-container {
+.page-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #e0e0e0;
+}
+
+.loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50vh;
-  color: #00ff00;
-}
-
-.page-container {
-  padding: 20px;
-  color: #fff;
+  height: 300px;
+  gap: 16px;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
 
-.info-grid {
+.header-titles h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.subtitle {
+  color: #b0b0b0;
+  margin: 4px 0;
+}
+
+.resumo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
-  background: #1e1e1e;
-  padding: 15px;
-  border-radius: 8px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-form {
+.card {
+  background: var(--ib-surface-2);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ib-border);
+}
+
+.card label {
+  display: block;
+  font-size: 12px;
+  color: var(--ib-text-muted);
+  margin-bottom: 4px;
+}
+
+.card p {
+  margin: 0;
+  font-weight: 500;
+  color: var(--ib-white);
+}
+
+.card .font-bold {
+  color: var(--ib-green);
+}
+
+.form-card {
+  margin-bottom: 24px;
+}
+
+.form-card mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-actions {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
+  justify-content: flex-end;
+}
+
+.table-container {
+  overflow-x: auto;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
-  background: #1e1e1e;
+  margin-top: 16px;
 }
 
 .data-table th, .data-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--ib-border);
+  color: var(--ib-white);
 }
 
 .data-table th {
-  color: #00ff00;
+  color: var(--ib-text-muted);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #b0b0b0;
+}
+
+.btn-brand-primary {
+  background-color: var(--ib-green) !important;
+  color: #121212 !important;
+}
+
+.btn-brand-secondary {
+  color: var(--ib-green) !important;
+  border: 1px solid var(--ib-green) !important;
+}
+
+.editor-venda-container ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background-color: var(--ib-surface-3);
+}
+
+.editor-venda-container ::ng-deep .mat-mdc-chip {
+  background-color: var(--ib-green) !important;
+  color: #121212 !important;
+}
+
+input {
+  color: #fff;
 }

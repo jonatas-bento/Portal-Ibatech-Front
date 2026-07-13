@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
 
     provideRouter(
       routes,
