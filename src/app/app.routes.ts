@@ -37,77 +37,38 @@ export const routes: Routes = [
       },
       {
         path: 'projetos',
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./pages/projetos/projetos-lista/projetos-lista.component')
-                .then(m => m.ProjetosListaComponent),
-            title: 'Projetos — IBATECH',
-          },
-          {
-            path: 'novo',
-            loadComponent: () =>
-              import('./pages/projetos/novo-projeto/novo-projeto.component')
-                .then(m => m.NovoProjetoComponent),
-            title: 'Novo Projeto — IBATECH',
-          },
-          {
-            path: ':id',
-            loadComponent: () =>
-              import('./pages/projetos/detalhe-projeto/detalhe-projeto.component')
-                .then(m => m.DetalheProjetoComponent),
-            title: 'Detalhes do Projeto — IBATECH',
-          },
-        ],
+        loadComponent: () => import('./pages/projetos/projetos-lista/projetos-lista.component').then(m => m.ProjetosListaComponent)
       },
       {
         path:        'estoque',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Funcionario'] },
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./pages/estoque/lista-produtos/lista-produtos.component')
-                .then(m => m.ListaProdutosComponent),
-            title: 'Estoque — IBATECH',
-          },
-          {
-            path: 'novo',
-            loadComponent: () =>
-              import('./pages/estoque/novo-produto/novo-produto.component')
-                .then(m => m.NovoProdutoComponent),
-            title: 'Novo Produto — IBATECH',
-          },
-        ],
+        loadComponent: () => import('./pages/estoque/lista-produtos/lista-produtos.component').then(m => m.ListaProdutosComponent)
       },
       {
         path:        'financeiro',
         canActivate: [roleGuard],
         data:        { roles: ['Admin'] },
-        loadComponent: () =>
-          import('./pages/financeiro/painel-financeiro/painel-financeiro.component')
-            .then(m => m.PainelFinanceiroComponent),
-        title: 'Financeiro — IBATECH',
+        loadComponent: () => import('./pages/financeiro/painel-financeiro/painel-financeiro.component').then(m => m.PainelFinanceiroComponent)
       },
       {
         path:        'usuarios',
         canActivate: [roleGuard],
         data:        { roles: ['Admin'] },
-        loadComponent: () =>
-          import('./pages/usuarios/lista-usuarios/lista-usuarios.component')
-            .then(m => m.ListaUsuariosComponent),
-        title: 'Usuários — IBATECH',
+        loadComponent: () => import('./pages/usuarios/lista-usuarios/lista-usuarios.component').then(m => m.ListaUsuariosComponent)
       },
       {
         path:        'clientes',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Vendedor'] },
-        loadComponent: () =>
-          import('./pages/clientes/lista-clientes/lista-clientes.component')
-            .then(m => m.ListaClientesComponent),
-        title: 'Clientes — IBATECH',
+        loadComponent: () => import('./pages/clientes/lista-clientes/lista-clientes.component').then(m => m.ListaClientesComponent)
+      },
+      {
+        path:        'vendas',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Vendedor'] },
+        loadComponent: () => import('./pages/vendas/lista-vendas/lista-vendas.component').then(m => m.ListaVendasComponent),
+        title: 'Vendas — IBATECH',
       },
     ],
   },

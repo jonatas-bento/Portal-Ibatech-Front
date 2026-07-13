@@ -1,0 +1,59 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Vendas</h1>
+    <p class="subtitle">Gerenciamento de vendas em rascunho</p>
+    <button class="btn-primary" (click)="criarNovaVenda()" [disabled]="criandoVenda">
+      {{ criandoVenda ? 'Criando...' : 'Nova venda' }}
+    </button>
+  </div>
+
+  <div class="filters-container">
+    <input type="text" [(ngModel)]="filtros.numero" placeholder="Número da venda">
+    <input type="text" [(ngModel)]="filtros.status" placeholder="Status">
+    <input type="date" [(ngModel)]="filtros.dataInicial" placeholder="Data inicial">
+    <input type="date" [(ngModel)]="filtros.dataFinal" placeholder="Data final">
+    <button class="btn-secondary" (click)="filtrar()">Filtrar</button>
+    <button class="btn-outline" (click)="limparFiltros()">Limpar</button>
+  </div>
+
+  <div class="table-container">
+    @if (loading) {
+      <div class="loading-state">Carregando...</div>
+    } @else if (vendas.length === 0) {
+      <div class="empty-state">Nenhuma venda encontrada.</div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Data</th>
+            <th>Vendedor</th>
+            <th>Status</th>
+            <th>Itens</th>
+            <th>Valor Bruto</th>
+            <th>Desconto</th>
+            <th>Total</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (venda of vendas; track venda.id) {
+            <tr>
+              <td>{{ venda.numero }}</td>
+              <td>{{ venda.dataVenda | date:'dd/MM/yyyy' }}</td>
+              <td>{{ venda.vendedorNome }}</td>
+              <td><span class="chip">{{ venda.status }}</span></td>
+              <td>{{ venda.quantidadeItens }}</td>
+              <td>{{ venda.valorBruto | currency:'BRL' }}</td>
+              <td>{{ venda.desconto | currency:'BRL' }}</td>
+              <td>{{ venda.valorTotal | currency:'BRL' }}</td>
+              <td>
+                <button class="btn-icon">Editar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
