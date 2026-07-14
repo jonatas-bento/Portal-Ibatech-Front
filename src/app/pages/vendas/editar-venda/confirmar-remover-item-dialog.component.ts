@@ -42,12 +42,22 @@ import { MatIconModule } from '@angular/material/icon';
       margin-top: 16px;
       color: var(--ib-text-secondary);
     }
-    .ib-btn-danger {
-      background-color: var(--ib-danger);
-      color: var(--ib-text-on-danger, white);
+    .btn-dialog-cancelar {
+      color: var(--ib-text-primary) !important;
+      border: 1px solid var(--ib-border);
+      background-color: transparent !important;
     }
-    .ib-btn-danger:hover {
-      background-color: var(--ib-danger-hover);
+    .btn-dialog-cancelar:hover {
+      color: var(--ib-text-primary) !important;
+      border-color: var(--ib-text-muted);
+      background-color: rgba(255,255,255,0.05) !important;
+    }
+    .btn-dialog-remover {
+      background-color: var(--ib-danger) !important;
+      color: var(--ib-white) !important;
+    }
+    .btn-dialog-remover mat-icon {
+      color: var(--ib-white) !important;
     }
   `]
 })

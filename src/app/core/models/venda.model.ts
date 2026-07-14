@@ -67,3 +67,8 @@ export interface AdicionarVendaItemRequest {
   quantidade: number;
   desconto: number;
 }
+
+export interface AtualizarVendaItemRequest {
+  quantidade: number;
+  desconto: number;
+}

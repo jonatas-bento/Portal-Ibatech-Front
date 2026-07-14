@@ -193,20 +193,36 @@
                   <td>{{ item.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>
                   <td>{{ item.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
                   <td>
-                    <button
-                      mat-icon-button
-                      color="warn"
-                      [disabled]="removendoItemId === item.id"
-                      (click)="removerItem(item)"
-                      matTooltip="Remover produto"
-                      aria-label="Remover produto"
-                    >
-                      @if (removendoItemId === item.id) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                      } @else {
-                        <mat-icon>delete_outline</mat-icon>
-                      }
-                    </button>
+                    <div style="display: flex; gap: 0.5rem;">
+                      <button
+                        mat-icon-button
+                        [disabled]="editandoItemId === item.id || removendoItemId === item.id"
+                        (click)="editarItem(item)"
+                        matTooltip="Editar produto"
+                        aria-label="Editar produto"
+                      >
+                        @if (editandoItemId === item.id) {
+                          <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                          <mat-icon>edit</mat-icon>
+                        }
+                      </button>
+
+                      <button
+                        mat-icon-button
+                        color="warn"
+                        [disabled]="editandoItemId === item.id || removendoItemId === item.id"
+                        (click)="removerItem(item)"
+                        matTooltip="Remover produto"
+                        aria-label="Remover produto"
+                      >
+                        @if (removendoItemId === item.id) {
+                          <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                          <mat-icon>delete_outline</mat-icon>
+                        }
+                      </button>
+                    </div>
                   </td>
                 </tr>
               }

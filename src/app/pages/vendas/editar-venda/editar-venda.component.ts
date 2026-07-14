@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { VendaService } from '../../../services/venda.service';
 import { ConfirmarRemoverItemDialogComponent } from './confirmar-remover-item-dialog.component';
+import { EditarVendaItemDialogComponent } from './editar-venda-item-dialog.component';
 import { ClienteService } from '../../../services/cliente.service';
 import { VendaDetalhe, AtualizarVendaRequest, AdicionarVendaItemRequest } from '../../../core/models/venda.model';
 import { ClienteResumo } from '../../../core/models/cliente.model';
@@ -49,6 +50,7 @@ export class EditarVendaComponent implements OnInit {
   carregandoProdutos = false;
   adicionandoItem = false;
   removendoItemId: string | null = null;
+  editandoItemId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -287,6 +289,49 @@ export class EditarVendaComponent implements OnInit {
               this.venda = vendaAtualizada;
               this.atualizarProdutosDisponiveis();
               this.toastService.success('Produto removido da venda.');
+            },
+            error: () => {
+              // O interceptor exibe o detalhe do backend.
+            }
+          });
+      }
+    });
+  }
+
+  editarItem(item: any): void {
+    if (!this.venda || this.editandoItemId) {
+      return;
+    }
+
+    this.dialog.open(EditarVendaItemDialogComponent, {
+      data: {
+        itemId: item.id,
+        codigoSku: item.codigoSku,
+        nomeProduto: item.nomeProduto,
+        quantidade: item.quantidade,
+        precoUnitario: item.precoUnitario,
+        desconto: item.desconto
+      },
+      width: '400px',
+      panelClass: 'ib-editar-item-dialog'
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.editandoItemId = item.id;
+
+        this.vendaService
+          .atualizarItem(this.venda!.id, item.id, {
+            quantidade: result.quantidade,
+            desconto: result.desconto
+          })
+          .pipe(
+            finalize(() => {
+              this.editandoItemId = null;
+            })
+          )
+          .subscribe({
+            next: (vendaAtualizada) => {
+              this.venda = vendaAtualizada;
+              this.toastService.success('Produto atualizado com sucesso.');
             },
             error: () => {
               // O interceptor exibe o detalhe do backend.
