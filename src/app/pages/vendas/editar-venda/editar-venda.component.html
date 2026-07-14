@@ -86,6 +86,83 @@
 
     <div class="card">
       <h2>Itens da venda</h2>
+
+      <div class="card form-card ib-dark-form" style="margin-top: 1rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1); background-color: rgba(30, 30, 30, 0.6);">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--ib-primary, #4caf50);">Adicionar produto</h3>
+        <form [formGroup]="itemForm" (ngSubmit)="adicionarItem()">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Produto</mat-label>
+              <mat-select formControlName="produtoId">
+                <mat-option [value]="null">Selecione um produto</mat-option>
+                @for (prod of produtosDisponiveis; track prod.id) {
+                  <mat-option [value]="prod.id">
+                    {{ prod.codigoSku || 'S/SKU' }} — {{ prod.nome }}
+                    <span style="font-size: 0.85em; opacity: 0.7; margin-left: 0.5rem;">
+                      Preço: {{ prod.precoVenda | currency:'BRL':'symbol':'1.2-2' }} | Estoque: {{ prod.quantidadeAtual }}
+                    </span>
+                  </mat-option>
+                }
+              </mat-select>
+              @if (itemForm.get('produtoId')?.hasError('required') && itemForm.get('produtoId')?.touched) {
+                <mat-error>O produto é obrigatório.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Quantidade</mat-label>
+              <input matInput type="number" formControlName="quantidade" min="1" step="1">
+              @if (itemForm.get('quantidade')?.hasError('required') && itemForm.get('quantidade')?.touched) {
+                <mat-error>A quantidade é obrigatória.</mat-error>
+              }
+              @if (itemForm.get('quantidade')?.hasError('min') && itemForm.get('quantidade')?.touched) {
+                <mat-error>A quantidade mínima é 1.</mat-error>
+              }
+              @if (itemForm.get('quantidade')?.hasError('pattern') && itemForm.get('quantidade')?.touched) {
+                <mat-error>A quantidade deve ser um número inteiro.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Desconto (R$)</mat-label>
+              <input matInput type="number" formControlName="desconto" min="0" step="0.01">
+              @if (itemForm.get('desconto')?.hasError('required') && itemForm.get('desconto')?.touched) {
+                <mat-error>O desconto é obrigatório.</mat-error>
+              }
+              @if (itemForm.get('desconto')?.hasError('min') && itemForm.get('desconto')?.touched) {
+                <mat-error>O desconto mínimo é 0.</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+
+          <!-- Erro de validação cruzada -->
+          @if (itemForm.hasError('descontoMaiorQueBruto') && itemForm.touched) {
+            <div style="color: var(--ib-danger, #f44336); margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500;">
+              O valor do desconto não pode ser maior que o valor bruto do item ({{ valorBrutoPrevio | currency:'BRL':'symbol':'1.2-2' }}).
+            </div>
+          }
+
+          <!-- Prévia informativa -->
+          @if (produtoSelecionado) {
+            <div class="preview-container" style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1.5rem; border: 1px solid rgba(255,255,255,0.05);">
+              <div><strong style="color: #ccc;">Preço Unitário:</strong> <span style="color: #fff;">{{ precoUnitarioPrevio | currency:'BRL':'symbol':'1.2-2' }}</span></div>
+              <div><strong style="color: #ccc;">Valor Bruto:</strong> <span style="color: #fff;">{{ valorBrutoPrevio | currency:'BRL':'symbol':'1.2-2' }}</span></div>
+              <div><strong style="color: #ccc;">Desconto:</strong> <span style="color: #fff;">{{ descontoPrevio | currency:'BRL':'symbol':'1.2-2' }}</span></div>
+              <div><strong style="color: #ccc;">Total Previsto:</strong> <span style="color: var(--ib-primary, #4caf50); font-weight: bold;">{{ totalPrevistoPrevio | currency:'BRL':'symbol':'1.2-2' }}</span></div>
+              <div><strong style="color: #ccc;">Estoque:</strong> <span style="color: #fff;">{{ estoqueInformativo }}</span></div>
+            </div>
+          }
+
+          <div class="form-actions" style="margin-top: 1rem;">
+            <button mat-raised-button type="submit" class="btn-brand-primary" [disabled]="adicionandoItem || itemForm.invalid">
+              <mat-icon>add_shopping_cart</mat-icon> {{ adicionandoItem ? 'Adicionando...' : 'Adicionar produto' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
       @if (venda.itens.length === 0) {
         <div class="empty-state">
           <mat-icon>inventory_2</mat-icon>
@@ -103,10 +180,11 @@
                 <th>Preço unitário</th>
                 <th>Desconto</th>
                 <th>Total</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              @for (item of venda.itens; track item.produtoId) {
+              @for (item of venda.itens; track item.id) {
                 <tr>
                   <td>{{ item.codigoSku }}</td>
                   <td>{{ item.nomeProduto }}</td>
@@ -114,6 +192,22 @@
                   <td>{{ item.precoUnitario | currency:'BRL':'symbol':'1.2-2' }}</td>
                   <td>{{ item.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>
                   <td>{{ item.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td>
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      [disabled]="removendoItemId === item.id"
+                      (click)="removerItem(item)"
+                      matTooltip="Remover produto"
+                      aria-label="Remover produto"
+                    >
+                      @if (removendoItemId === item.id) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                      } @else {
+                        <mat-icon>delete_outline</mat-icon>
+                      }
+                    </button>
+                  </td>
                 </tr>
               }
             </tbody>

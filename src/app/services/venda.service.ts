@@ -7,6 +7,7 @@ import {
   VendaDetalhe,
   CriarVendaRequest,
   AtualizarVendaRequest,
+  AdicionarVendaItemRequest,
   VendaFiltro
 } from '../core/models/venda.model';
 
@@ -43,5 +44,13 @@ export class VendaService {
 
   atualizar(id: string, request: AtualizarVendaRequest): Observable<VendaDetalhe> {
     return this.http.put<VendaDetalhe>(`${this.apiUrl}/${id}`, request);
+  }
+
+  adicionarItem(vendaId: string, request: AdicionarVendaItemRequest): Observable<VendaDetalhe> {
+    return this.http.post<VendaDetalhe>(`${this.apiUrl}/${vendaId}/itens`, request);
+  }
+
+  removerItem(vendaId: string, itemId: string): Observable<VendaDetalhe> {
+    return this.http.delete<VendaDetalhe>(`${this.apiUrl}/${vendaId}/itens/${itemId}`);
   }
 }

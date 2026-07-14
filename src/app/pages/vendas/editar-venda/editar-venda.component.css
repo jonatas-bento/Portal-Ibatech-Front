@@ -117,11 +117,19 @@
   background-color: var(--ib-surface-3);
 }
 
+.editor-venda-container ::ng-deep .mat-mdc-form-field .mat-mdc-select-arrow {
+  color: var(--ib-white) !important;
+}
+
 .editor-venda-container ::ng-deep .mat-mdc-chip {
   background-color: var(--ib-green) !important;
   color: #121212 !important;
 }
 
-input {
-  color: #fff;
+.editor-venda-container ::ng-deep .mat-mdc-form-field .mat-mdc-input-element {
+  color: var(--ib-white) !important;
+}
+
+.editor-venda-container ::ng-deep .mat-mdc-form-field .mat-mdc-select-value {
+  color: var(--ib-white) !important;
 }

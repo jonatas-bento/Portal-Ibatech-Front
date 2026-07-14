@@ -61,3 +61,9 @@ export interface AtualizarVendaRequest {
   clienteId?: string | null;
   observacao?: string | null;
 }
+
+export interface AdicionarVendaItemRequest {
+  produtoId: string;
+  quantidade: number;
+  desconto: number;
+}
