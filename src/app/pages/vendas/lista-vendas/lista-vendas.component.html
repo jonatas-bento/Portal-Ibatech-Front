@@ -19,8 +19,9 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
       <mat-select [(ngModel)]="filtros.status">
-        <mat-option value="Rascunho">Rascunho</mat-option>
-        <mat-option value="Finalizada">Finalizada</mat-option>
+        @for (option of statusOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -76,7 +77,13 @@
               <td class="nowrap">{{ venda.numero }}</td>
               <td class="nowrap">{{ venda.dataVenda | date:'dd/MM/yyyy' }}</td>
               <td>{{ venda.vendedorNome }}</td>
-              <td><mat-chip-set><mat-chip>{{ venda.status }}</mat-chip></mat-chip-set></td>
+              <td>
+                <mat-chip-set>
+                  <mat-chip [class.chip-success]="venda.status === 'Concluida'">
+                    {{ venda.status === 'Concluida' ? 'Concluída' : venda.status }}
+                  </mat-chip>
+                </mat-chip-set>
+              </td>
               <td>{{ venda.quantidadeItens }}</td>
               <td class="text-right nowrap">{{ venda.valorBruto | currency:'BRL':'symbol':'1.2-2' }}</td>
               <td class="text-right nowrap">{{ venda.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>

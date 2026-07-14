@@ -9,7 +9,8 @@ import {
   AtualizarVendaRequest,
   AdicionarVendaItemRequest,
   AtualizarVendaItemRequest,
-  VendaFiltro
+  VendaFiltro,
+  FinalizarVendaRequest
 } from '../core/models/venda.model';
 
 @Injectable({
@@ -61,5 +62,12 @@ export class VendaService {
     request: AtualizarVendaItemRequest
   ): Observable<VendaDetalhe> {
     return this.http.put<VendaDetalhe>(`${this.apiUrl}/${vendaId}/itens/${itemId}`, request);
+  }
+
+  finalizar(
+    vendaId: string,
+    request: FinalizarVendaRequest
+  ): Observable<VendaDetalhe> {
+    return this.http.post<VendaDetalhe>(`${this.apiUrl}/${vendaId}/finalizar`, request);
   }
 }

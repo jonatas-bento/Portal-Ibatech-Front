@@ -24,6 +24,12 @@ export interface VendaItem {
   valorTotal: number;
 }
 
+export type FormaPagamento =
+  | 'Dinheiro'
+  | 'Pix'
+  | 'CartaoDebito'
+  | 'CartaoCredito';
+
 export interface VendaDetalhe {
   id: string;
   numero: string;
@@ -41,6 +47,10 @@ export interface VendaDetalhe {
   criadoEm: string;
   atualizadoEm?: string | null;
   itens: VendaItem[];
+  dataFinalizacao?: string | null;
+  formaPagamento?: FormaPagamento | null;
+  valorRecebido?: number | null;
+  troco?: number | null;
 }
 
 export interface VendaFiltro {
@@ -71,4 +81,9 @@ export interface AdicionarVendaItemRequest {
 export interface AtualizarVendaItemRequest {
   quantidade: number;
   desconto: number;
+}
+
+export interface FinalizarVendaRequest {
+  formaPagamento: FormaPagamento;
+  valorRecebido: number | null;
 }

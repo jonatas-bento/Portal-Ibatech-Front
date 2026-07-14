@@ -9,13 +9,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { VendaService } from '../../../services/venda.service';
 import { ConfirmarRemoverItemDialogComponent } from './confirmar-remover-item-dialog.component';
 import { EditarVendaItemDialogComponent } from './editar-venda-item-dialog.component';
+import { FinalizarVendaDialogComponent } from './finalizar-venda-dialog.component';
 import { ClienteService } from '../../../services/cliente.service';
-import { VendaDetalhe, AtualizarVendaRequest, AdicionarVendaItemRequest } from '../../../core/models/venda.model';
+import {
+  VendaDetalhe,
+  AtualizarVendaRequest,
+  AdicionarVendaItemRequest,
+  FinalizarVendaRequest
+} from '../../../core/models/venda.model';
 import { ClienteResumo } from '../../../core/models/cliente.model';
 import { ToastService } from '../../../services/toast.service';
 import { ProdutoService } from '../../../services/produto.service';
@@ -33,7 +40,8 @@ import { ProdutoResponse } from '../../../core/models/produto.model';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './editar-venda.component.html',
   styleUrls: ['./editar-venda.component.css']
@@ -51,6 +59,7 @@ export class EditarVendaComponent implements OnInit {
   adicionandoItem = false;
   removendoItemId: string | null = null;
   editandoItemId: string | null = null;
+  finalizandoVenda = false;
 
   constructor(
     private fb: FormBuilder,
@@ -175,6 +184,57 @@ export class EditarVendaComponent implements OnInit {
     return this.produtoSelecionado?.quantidadeAtual ?? 0;
   }
 
+  /**
+   * Indica se a venda pode ser editada (somente vendas em Rascunho).
+   * Deve ser usado tanto no template quanto como guard nos métodos de ação.
+   */
+  get vendaPodeSerEditada(): boolean {
+    return this.venda?.status === 'Rascunho';
+  }
+
+  get vendaConcluida(): boolean {
+    return this.venda?.status === 'Concluida';
+  }
+
+  get formaPagamentoLabel(): string {
+    switch (this.venda?.formaPagamento) {
+      case 'Dinheiro':
+        return 'Dinheiro';
+      case 'Pix':
+        return 'Pix';
+      case 'CartaoDebito':
+        return 'Cartão de débito';
+      case 'CartaoCredito':
+        return 'Cartão de crédito';
+      default:
+        return '-';
+    }
+  }
+
+  get valorRecebidoExibicao(): number {
+    if (!this.venda) {
+      return 0;
+    }
+
+    if (this.venda.formaPagamento === 'Dinheiro') {
+      return this.venda.valorRecebido ?? 0;
+    }
+
+    return this.venda.valorTotal;
+  }
+
+  get trocoExibicao(): number {
+    if (!this.venda) {
+      return 0;
+    }
+
+    if (this.venda.formaPagamento === 'Dinheiro') {
+      return this.venda.troco ?? 0;
+    }
+
+    return 0;
+  }
+
   validarDescontoMaiorQueBruto(): ValidationErrors | null {
   if (!this.itemForm) {
     return null;
@@ -204,7 +264,7 @@ export class EditarVendaComponent implements OnInit {
 }
 
   adicionarItem(): void {
-    if (this.adicionandoItem || !this.venda) {
+    if (!this.vendaPodeSerEditada || this.adicionandoItem || !this.venda) {
       return;
     }
 
@@ -262,7 +322,7 @@ export class EditarVendaComponent implements OnInit {
   }
 
   removerItem(item: any): void {
-    if (!this.venda || this.removendoItemId) {
+    if (!this.vendaPodeSerEditada || !this.venda || this.removendoItemId) {
       return;
     }
 
@@ -299,7 +359,7 @@ export class EditarVendaComponent implements OnInit {
   }
 
   editarItem(item: any): void {
-    if (!this.venda || this.editandoItemId) {
+    if (!this.vendaPodeSerEditada || !this.venda || this.editandoItemId) {
       return;
     }
 
@@ -349,7 +409,7 @@ export class EditarVendaComponent implements OnInit {
   }
 
   salvar(): void {
-    if (this.salvando || this.form.invalid || !this.venda) {
+    if (!this.vendaPodeSerEditada || this.salvando || this.form.invalid || !this.venda) {
       return;
     }
 
@@ -377,6 +437,68 @@ export class EditarVendaComponent implements OnInit {
           this.toastService.error('Erro ao atualizar venda.');
         }
       });
+  }
+
+  /**
+   * Abre o diálogo de checkout da venda e, se confirmado, chama o
+   * endpoint de finalização. A resposta do backend é a fonte definitiva
+   * dos dados da venda finalizada — não há recálculo local.
+   */
+  abrirFinalizacao(): void {
+    if (!this.venda) {
+      return;
+    }
+
+    if (!this.vendaPodeSerEditada) {
+      return;
+    }
+
+    if (this.venda.itens.length === 0) {
+      return;
+    }
+
+    if (this.finalizandoVenda || this.salvando || this.adicionandoItem || this.editandoItemId || this.removendoItemId) {
+      return;
+    }
+
+    this.dialog.open(FinalizarVendaDialogComponent, {
+      data: {
+        numero: this.venda.numero,
+        valorBruto: this.venda.valorBruto,
+        desconto: this.venda.desconto,
+        valorTotal: this.venda.valorTotal,
+        quantidadeItens: this.venda.itens.length
+      },
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ib-finalizar-venda-dialog'
+    }).afterClosed().subscribe((resultado: FinalizarVendaRequest | null) => {
+      if (!resultado || !this.venda) {
+        return;
+      }
+
+      const request: FinalizarVendaRequest = {
+        formaPagamento: resultado.formaPagamento,
+        valorRecebido: resultado.valorRecebido
+      };
+
+      this.finalizandoVenda = true;
+
+      this.vendaService
+        .finalizar(this.venda.id, request)
+        .pipe(finalize(() => this.finalizandoVenda = false))
+        .subscribe({
+          next: (vendaFinalizada) => {
+            this.venda = vendaFinalizada;
+            this.toastService.success('Venda finalizada com sucesso.');
+          },
+          error: () => {
+            // O interceptor exibe a mensagem específica retornada pelo backend
+            // (estoque insuficiente, venda já concluída, conflito, etc).
+            // A venda permanece como estava antes da tentativa.
+          }
+        });
+    });
   }
 
   voltar(): void {

@@ -40,6 +40,14 @@ export class ListaVendasComponent implements OnInit {
   filtros: VendaFiltro = {
     status: 'Rascunho'
   };
+  readonly statusOptions = [
+    { value: '', label: 'Todos' },
+    { value: 'Rascunho', label: 'Rascunho' },
+    { value: 'AguardandoPagamento', label: 'Aguardando pagamento' },
+    { value: 'Concluida', label: 'Concluída' },
+    { value: 'Cancelada', label: 'Cancelada' },
+    { value: 'Estornada', label: 'Estornada' }
+  ];
   loading = false;
   criandoVenda = false;
 
@@ -63,7 +71,6 @@ export class ListaVendasComponent implements OnInit {
           this.loading = false;
         },
         error: () => {
-          this.toastService.error('Não foi possível carregar as vendas.');
           this.loading = false;
         }
       });

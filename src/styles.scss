@@ -280,3 +280,108 @@ body {
     opacity: 0.5;
   }
 }
+
+.ib-finalizar-venda-dialog {
+  width: 520px;
+  max-width: calc(100vw - 32px);
+
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: var(--ib-surface-2);
+    --mdc-dialog-subhead-color: var(--ib-text-primary);
+    --mdc-dialog-supporting-text-color: var(--ib-text-secondary);
+    --mat-dialog-container-shape: var(--ib-radius-md);
+  }
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: var(--ib-surface-2) !important;
+    color: var(--ib-text-primary) !important;
+    border: 1px solid var(--ib-border);
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-card);
+  }
+
+  .mat-mdc-dialog-title {
+    color: var(--ib-text-primary) !important;
+    font-weight: 700;
+  }
+
+  .mat-mdc-dialog-title mat-icon {
+    color: var(--ib-green) !important;
+  }
+
+  .mat-mdc-dialog-content {
+    color: var(--ib-text-secondary) !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    gap: 8px;
+    padding: 12px 24px 20px;
+  }
+
+  .ib-dark-form .mat-mdc-form-field {
+    --mdc-outlined-text-field-input-text-color: var(--ib-text-primary);
+    --mdc-outlined-text-field-label-text-color: var(--ib-text-secondary);
+    --mdc-outlined-text-field-hover-label-text-color: var(--ib-text-primary);
+    --mdc-outlined-text-field-focus-label-text-color: var(--ib-green);
+
+    --mdc-outlined-text-field-outline-color: var(--ib-border);
+    --mdc-outlined-text-field-hover-outline-color: var(--ib-text-secondary);
+    --mdc-outlined-text-field-focus-outline-color: var(--ib-green);
+
+    --mdc-outlined-text-field-caret-color: var(--ib-green);
+  }
+
+  .ib-dark-form .mat-mdc-text-field-wrapper {
+    background-color: var(--ib-surface-3) !important;
+  }
+
+  .ib-dark-form input.mat-mdc-input-element {
+    color: var(--ib-text-primary) !important;
+    -webkit-text-fill-color: var(--ib-text-primary) !important;
+    caret-color: var(--ib-green);
+    color-scheme: dark;
+  }
+
+  .ib-dark-form .mat-mdc-select-value,
+  .ib-dark-form .mat-mdc-select-value-text {
+    color: var(--ib-text-primary) !important;
+  }
+
+  .ib-dark-form .mat-mdc-select-arrow {
+    color: var(--ib-text-secondary) !important;
+  }
+
+  .ib-dark-form .mat-mdc-form-field-error {
+    color: var(--ib-danger) !important;
+  }
+
+  .btn-dialog-cancelar {
+    color: var(--ib-text-primary) !important;
+    background: transparent !important;
+    border: 1px solid var(--ib-border);
+  }
+
+  .btn-dialog-cancelar:hover {
+    color: var(--ib-green) !important;
+    border-color: var(--ib-green);
+    background-color: var(--ib-brand-soft) !important;
+  }
+
+  .btn-dialog-finalizar {
+    color: #121212 !important;
+    background-color: var(--ib-green) !important;
+  }
+
+  .btn-dialog-finalizar mat-icon {
+    color: #121212 !important;
+  }
+
+  .btn-dialog-finalizar:disabled {
+    opacity: 0.5;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+
