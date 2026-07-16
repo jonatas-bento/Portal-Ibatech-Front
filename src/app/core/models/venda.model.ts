@@ -51,6 +51,12 @@ export interface VendaDetalhe {
   formaPagamento?: FormaPagamento | null;
   valorRecebido?: number | null;
   troco?: number | null;
+  dataCancelamento?: string | null;
+  canceladaPorUsuarioId?: string | null;
+  motivoCancelamento?: string | null;
+  dataEstorno?: string | null;
+  estornadaPorUsuarioId?: string | null;
+  motivoEstorno?: string | null;
 }
 
 export interface VendaFiltro {
@@ -86,4 +92,12 @@ export interface AtualizarVendaItemRequest {
 export interface FinalizarVendaRequest {
   formaPagamento: FormaPagamento;
   valorRecebido: number | null;
+}
+
+export interface CancelarVendaRequest {
+  motivo: string;
+}
+
+export interface EstornarVendaRequest {
+  motivo: string;
 }

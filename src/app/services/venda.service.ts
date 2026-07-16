@@ -10,7 +10,9 @@ import {
   AdicionarVendaItemRequest,
   AtualizarVendaItemRequest,
   VendaFiltro,
-  FinalizarVendaRequest
+  FinalizarVendaRequest,
+  CancelarVendaRequest,
+  EstornarVendaRequest
 } from '../core/models/venda.model';
 
 @Injectable({
@@ -69,5 +71,19 @@ export class VendaService {
     request: FinalizarVendaRequest
   ): Observable<VendaDetalhe> {
     return this.http.post<VendaDetalhe>(`${this.apiUrl}/${vendaId}/finalizar`, request);
+  }
+
+  cancelar(
+    vendaId: string,
+    request: CancelarVendaRequest
+  ): Observable<VendaDetalhe> {
+    return this.http.post<VendaDetalhe>(`${this.apiUrl}/${vendaId}/cancelar`, request);
+  }
+
+  estornar(
+    vendaId: string,
+    request: EstornarVendaRequest
+  ): Observable<VendaDetalhe> {
+    return this.http.post<VendaDetalhe>(`${this.apiUrl}/${vendaId}/estornar`, request);
   }
 }

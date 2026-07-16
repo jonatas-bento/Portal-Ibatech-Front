@@ -133,3 +133,83 @@
 .editor-venda-container ::ng-deep .mat-mdc-form-field .mat-mdc-select-value {
   color: var(--ib-white) !important;
 }
+
+/* â”€â”€ Badges de status na listagem/detalhe â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chip-concluida {
+  background-color: var(--ib-green) !important;
+  color: #121212 !important;
+}
+
+.chip-cancelada {
+  background-color: rgba(107, 114, 128, 0.2) !important;
+  color: var(--ib-text-muted) !important;
+}
+
+.chip-estornada {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #F59E0B !important;
+}
+
+/* â”€â”€ BotÃµes de aÃ§Ã£o da venda â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.btn-cancelar-venda {
+  color: var(--ib-danger) !important;
+  border: 1px solid var(--ib-danger) !important;
+}
+
+.btn-cancelar-venda:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+}
+
+.btn-estornar-venda {
+  color: var(--ib-danger) !important;
+  border: 1px solid var(--ib-danger) !important;
+}
+
+.btn-estornar-venda:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+}
+
+/* â”€â”€ Blocos de somente-leitura (Cancelada / Estornada) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.venda-cancelada-card,
+.venda-estornada-card {
+  margin-bottom: 24px;
+}
+
+.venda-cancelada-header,
+.venda-estornada-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.venda-cancelada-header mat-icon,
+.venda-estornada-header mat-icon {
+  color: var(--ib-text-muted);
+}
+
+.venda-estornada-header mat-icon {
+  color: #F59E0B;
+}
+
+.venda-cancelada-header h2,
+.venda-estornada-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--ib-white);
+}
+
+.venda-cancelada-card .resumo-grid,
+.venda-estornada-card .resumo-grid {
+  margin-bottom: 12px;
+}
+
+.card.full-span {
+  grid-column: 1 / -1;
+}
+
+.info-preservado {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ib-text-muted);
+}

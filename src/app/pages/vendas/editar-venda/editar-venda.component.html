@@ -11,6 +11,12 @@
         @if (vendaConcluida) {
           <p class="subtitle">Venda concluída — somente consulta</p>
           <mat-chip-set><mat-chip class="chip-concluida">Concluída</mat-chip></mat-chip-set>
+        } @else if (vendaCancelada) {
+          <p class="subtitle">Venda cancelada — somente consulta</p>
+          <mat-chip-set><mat-chip class="chip-cancelada">Cancelada</mat-chip></mat-chip-set>
+        } @else if (vendaEstornada) {
+          <p class="subtitle">Venda estornada — somente consulta</p>
+          <mat-chip-set><mat-chip class="chip-estornada">Estornada</mat-chip></mat-chip-set>
         } @else if (vendaPodeSerEditada) {
           <p class="subtitle">Edição do rascunho da venda</p>
           <mat-chip-set><mat-chip>Rascunho</mat-chip></mat-chip-set>
@@ -25,7 +31,7 @@
             mat-raised-button
             type="button"
             class="btn-brand-primary"
-            [disabled]="finalizandoVenda || salvando || adicionandoItem || !!editandoItemId || !!removendoItemId || venda.itens.length === 0"
+            [disabled]="operacaoEmAndamento || venda.itens.length === 0"
             [matTooltip]="venda.itens.length === 0 ? 'Adicione ao menos um produto para finalizar a venda.' : ''"
             (click)="abrirFinalizacao()">
             @if (finalizandoVenda) {
@@ -36,11 +42,42 @@
             {{ finalizandoVenda ? 'Finalizando...' : 'Finalizar venda' }}
           </button>
         }
+        @if (podeCancelarVenda) {
+          <button
+            mat-stroked-button
+            type="button"
+            class="btn-cancelar-venda"
+            [disabled]="operacaoEmAndamento"
+            (click)="abrirCancelamento()">
+            @if (cancelandoVenda) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              <mat-icon>block</mat-icon>
+            }
+            {{ cancelandoVenda ? 'Cancelando...' : 'Cancelar venda' }}
+          </button>
+        }
+        @if (podeEstornarVenda) {
+          <button
+            mat-stroked-button
+            type="button"
+            class="btn-estornar-venda"
+            [disabled]="operacaoEmAndamento"
+            (click)="abrirEstorno()">
+            @if (estornandoVenda) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              <mat-icon>currency_exchange</mat-icon>
+            }
+            {{ estornandoVenda ? 'Estornando...' : 'Estornar venda' }}
+          </button>
+        }
         <button mat-button type="button" class="btn-brand-secondary" (click)="voltar()">
           <mat-icon>arrow_back</mat-icon> Voltar
         </button>
       </div>
     </div>
+
 
     @if (vendaConcluida) {
       <div class="card venda-concluida-card">
@@ -74,7 +111,68 @@
       </div>
     }
 
+    @if (vendaCancelada) {
+      <div class="card venda-cancelada-card">
+        <div class="venda-cancelada-header">
+          <mat-icon>block</mat-icon>
+          <h2>Venda cancelada</h2>
+        </div>
+
+        <div class="resumo-grid">
+          <div class="card">
+            <label>Data e hora do cancelamento</label>
+            <p>{{ venda.dataCancelamento ? (venda.dataCancelamento | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
+          </div>
+          <div class="card">
+            <label>Responsável</label>
+            <p>{{ venda.canceladaPorUsuarioId ? 'Não disponível' : '-' }}</p>
+          </div>
+          <div class="card full-span">
+            <label>Motivo</label>
+            <p>{{ venda.motivoCancelamento || '-' }}</p>
+          </div>
+        </div>
+
+        <p class="info-preservado">Itens e totais foram preservados para consulta.</p>
+      </div>
+    }
+
+    @if (vendaEstornada) {
+      <div class="card venda-estornada-card">
+        <div class="venda-estornada-header">
+          <mat-icon>currency_exchange</mat-icon>
+          <h2>Venda estornada</h2>
+        </div>
+
+        <div class="resumo-grid">
+          <div class="card">
+            <label>Data e hora do estorno</label>
+            <p>{{ venda.dataEstorno ? (venda.dataEstorno | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
+          </div>
+          <div class="card">
+            <label>Responsável</label>
+            <p>{{ venda.estornadaPorUsuarioId ? 'Não disponível' : '-' }}</p>
+          </div>
+          <div class="card">
+            <label>Total compensado</label>
+            <p class="font-bold">{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</p>
+          </div>
+          <div class="card">
+            <label>Forma de pagamento original</label>
+            <p>{{ formaPagamentoLabel }}</p>
+          </div>
+          <div class="card full-span">
+            <label>Motivo</label>
+            <p>{{ venda.motivoEstorno || '-' }}</p>
+          </div>
+        </div>
+
+        <p class="info-preservado">Estoque devolvido e compensação financeira registrada.</p>
+      </div>
+    }
+
     <div class="resumo-grid">
+
       <div class="card">
         <label>Número</label>
         <p>{{ venda.numero }}</p>

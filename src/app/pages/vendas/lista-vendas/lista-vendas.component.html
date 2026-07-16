@@ -79,8 +79,11 @@
               <td>{{ venda.vendedorNome }}</td>
               <td>
                 <mat-chip-set>
-                  <mat-chip [class.chip-success]="venda.status === 'Concluida'">
-                    {{ venda.status === 'Concluida' ? 'Concluída' : venda.status }}
+                  <mat-chip
+                    [class.chip-success]="venda.status === 'Concluida'"
+                    [class.chip-cancelada]="venda.status === 'Cancelada'"
+                    [class.chip-estornada]="venda.status === 'Estornada'">
+                    {{ statusLabel(venda.status) }}
                   </mat-chip>
                 </mat-chip-set>
               </td>
@@ -89,10 +92,15 @@
               <td class="text-right nowrap">{{ venda.desconto | currency:'BRL':'symbol':'1.2-2' }}</td>
               <td class="text-right nowrap font-bold">{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
               <td class="text-center">
-                <button mat-icon-button class="btn-icon-edit" [routerLink]="['/dashboard/vendas', venda.id]" matTooltip="Abrir venda">
-                  <mat-icon>edit</mat-icon>
+                <button
+                  mat-icon-button
+                  class="btn-icon-edit"
+                  [routerLink]="['/dashboard/vendas', venda.id]"
+                  [matTooltip]="venda.status === 'Rascunho' ? 'Editar venda' : 'Consultar venda'">
+                  <mat-icon>{{ venda.status === 'Rascunho' ? 'edit' : 'visibility' }}</mat-icon>
                 </button>
               </td>
+
             </tr>
           }
         </tbody>

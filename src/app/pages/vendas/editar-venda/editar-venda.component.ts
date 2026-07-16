@@ -16,17 +16,23 @@ import { VendaService } from '../../../services/venda.service';
 import { ConfirmarRemoverItemDialogComponent } from './confirmar-remover-item-dialog.component';
 import { EditarVendaItemDialogComponent } from './editar-venda-item-dialog.component';
 import { FinalizarVendaDialogComponent } from './finalizar-venda-dialog.component';
+import { CancelarVendaDialogComponent } from './cancelar-venda-dialog.component';
+import { EstornarVendaDialogComponent } from './estornar-venda-dialog.component';
 import { ClienteService } from '../../../services/cliente.service';
 import {
   VendaDetalhe,
   AtualizarVendaRequest,
   AdicionarVendaItemRequest,
-  FinalizarVendaRequest
+  FinalizarVendaRequest,
+  CancelarVendaRequest,
+  EstornarVendaRequest
 } from '../../../core/models/venda.model';
 import { ClienteResumo } from '../../../core/models/cliente.model';
 import { ToastService } from '../../../services/toast.service';
 import { ProdutoService } from '../../../services/produto.service';
 import { ProdutoResponse } from '../../../core/models/produto.model';
+import { AuthService } from '../../../services/auth.service';
+
 
 @Component({
   selector: 'app-editar-venda',
@@ -60,6 +66,8 @@ export class EditarVendaComponent implements OnInit {
   removendoItemId: string | null = null;
   editandoItemId: string | null = null;
   finalizandoVenda = false;
+  cancelandoVenda = false;
+  estornandoVenda = false;
 
   constructor(
     private fb: FormBuilder,
@@ -69,8 +77,10 @@ export class EditarVendaComponent implements OnInit {
     private clienteService: ClienteService,
     private toastService: ToastService,
     private produtoService: ProdutoService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
+
     this.form = this.fb.group({
       clienteId: [null],
       observacao: ['']
@@ -90,7 +100,7 @@ export class EditarVendaComponent implements OnInit {
       this.carregarClientes();
       this.carregarProdutos();
     } else {
-      this.toastService.error('ID da venda não informado.');
+      this.toastService.error('ID da venda nÃ£o informado.');
       this.router.navigate(['/dashboard/vendas']);
     }
   }
@@ -186,7 +196,7 @@ export class EditarVendaComponent implements OnInit {
 
   /**
    * Indica se a venda pode ser editada (somente vendas em Rascunho).
-   * Deve ser usado tanto no template quanto como guard nos métodos de ação.
+   * Deve ser usado tanto no template quanto como guard nos mÃ©todos de aÃ§Ã£o.
    */
   get vendaPodeSerEditada(): boolean {
     return this.venda?.status === 'Rascunho';
@@ -196,6 +206,61 @@ export class EditarVendaComponent implements OnInit {
     return this.venda?.status === 'Concluida';
   }
 
+  get vendaCancelada(): boolean {
+    return this.venda?.status === 'Cancelada';
+  }
+
+  get vendaEstornada(): boolean {
+    return this.venda?.status === 'Estornada';
+  }
+
+  get usuarioEhAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  /**
+   * Indica se qualquer operaÃ§Ã£o de escrita estÃ¡ em andamento na tela.
+   * Usado para impedir aÃ§Ãµes concorrentes (abrir diÃ¡logos, disparar
+   * novas requisiÃ§Ãµes) enquanto uma chamada anterior ainda nÃ£o terminou.
+   */
+  get operacaoEmAndamento(): boolean {
+    return (
+      this.salvando ||
+      this.adicionandoItem ||
+      !!this.editandoItemId ||
+      !!this.removendoItemId ||
+      this.finalizandoVenda ||
+      this.cancelandoVenda ||
+      this.estornandoVenda
+    );
+  }
+
+  /**
+   * Regras de autorizaÃ§Ã£o visual (o backend permanece a fonte definitiva):
+   * - Admin pode cancelar qualquer venda em Rascunho;
+   * - Vendedor pode cancelar somente as prÃ³prias vendas em Rascunho.
+   */
+  get podeCancelarVenda(): boolean {
+    if (!this.venda || this.venda.status !== 'Rascunho') {
+      return false;
+    }
+
+    if (this.usuarioEhAdmin) {
+      return true;
+    }
+
+    const usuarioId = this.authService.currentUserId();
+    return !!usuarioId && this.venda.vendedorId === usuarioId;
+  }
+
+  /**
+   * Somente Admin pode estornar, e somente vendas ConcluÃ­da.
+   */
+  get podeEstornarVenda(): boolean {
+    return this.usuarioEhAdmin && this.venda?.status === 'Concluida';
+  }
+
+
   get formaPagamentoLabel(): string {
     switch (this.venda?.formaPagamento) {
       case 'Dinheiro':
@@ -203,9 +268,9 @@ export class EditarVendaComponent implements OnInit {
       case 'Pix':
         return 'Pix';
       case 'CartaoDebito':
-        return 'Cartão de débito';
+        return 'CartÃ£o de dÃ©bito';
       case 'CartaoCredito':
-        return 'Cartão de crédito';
+        return 'CartÃ£o de crÃ©dito';
       default:
         return '-';
     }
@@ -316,7 +381,7 @@ export class EditarVendaComponent implements OnInit {
         },
         error: () => {
           // O interceptor apresenta a mensagem retornada pelo backend.
-          // O formulário permanece preenchido para que o usuário corrija.
+          // O formulÃ¡rio permanece preenchido para que o usuÃ¡rio corrija.
         }
       });
   }
@@ -440,9 +505,9 @@ export class EditarVendaComponent implements OnInit {
   }
 
   /**
-   * Abre o diálogo de checkout da venda e, se confirmado, chama o
-   * endpoint de finalização. A resposta do backend é a fonte definitiva
-   * dos dados da venda finalizada — não há recálculo local.
+   * Abre o diÃ¡logo de checkout da venda e, se confirmado, chama o
+   * endpoint de finalizaÃ§Ã£o. A resposta do backend Ã© a fonte definitiva
+   * dos dados da venda finalizada â€” nÃ£o hÃ¡ recÃ¡lculo local.
    */
   abrirFinalizacao(): void {
     if (!this.venda) {
@@ -493,9 +558,118 @@ export class EditarVendaComponent implements OnInit {
             this.toastService.success('Venda finalizada com sucesso.');
           },
           error: () => {
-            // O interceptor exibe a mensagem específica retornada pelo backend
-            // (estoque insuficiente, venda já concluída, conflito, etc).
+            // O interceptor exibe a mensagem especÃ­fica retornada pelo backend
+            // (estoque insuficiente, venda jÃ¡ concluÃ­da, conflito, etc).
             // A venda permanece como estava antes da tentativa.
+          }
+        });
+    });
+  }
+
+  /**
+   * Guard TypeScript: valida venda existente, status Rascunho, usuÃ¡rio
+   * autorizado e ausÃªncia de operaÃ§Ã£o em andamento antes de abrir o
+   * diÃ¡logo de cancelamento. NÃ£o confia apenas no botÃ£o oculto no template.
+   */
+  abrirCancelamento(): void {
+    if (!this.venda) {
+      return;
+    }
+
+    if (this.venda.status !== 'Rascunho') {
+      return;
+    }
+
+    if (!this.podeCancelarVenda) {
+      return;
+    }
+
+    if (this.operacaoEmAndamento) {
+      return;
+    }
+
+    this.dialog.open(CancelarVendaDialogComponent, {
+      data: {
+        numero: this.venda.numero,
+        valorTotal: this.venda.valorTotal,
+        quantidadeItens: this.venda.itens.length
+      },
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ib-cancelar-venda-dialog'
+    }).afterClosed().subscribe((resultado: CancelarVendaRequest | null) => {
+      if (!resultado || !this.venda) {
+        return;
+      }
+
+      this.cancelandoVenda = true;
+
+      this.vendaService
+        .cancelar(this.venda.id, resultado)
+        .pipe(finalize(() => this.cancelandoVenda = false))
+        .subscribe({
+          next: (vendaAtualizada) => {
+            this.venda = vendaAtualizada;
+            this.toastService.success('Venda cancelada com sucesso.');
+          },
+          error: () => {
+            // O interceptor exibe a mensagem especÃ­fica retornada pelo backend
+            // (403, 409, etc). A venda permanece como estava antes da tentativa.
+          }
+        });
+    });
+  }
+
+  /**
+   * Guard TypeScript: valida venda existente, status Concluida, usuÃ¡rio
+   * Admin e ausÃªncia de operaÃ§Ã£o em andamento antes de abrir o diÃ¡logo
+   * de estorno. NÃ£o confia apenas no botÃ£o oculto no template.
+   */
+  abrirEstorno(): void {
+    if (!this.venda) {
+      return;
+    }
+
+    if (this.venda.status !== 'Concluida') {
+      return;
+    }
+
+    if (!this.usuarioEhAdmin) {
+      return;
+    }
+
+    if (this.operacaoEmAndamento) {
+      return;
+    }
+
+    this.dialog.open(EstornarVendaDialogComponent, {
+      data: {
+        numero: this.venda.numero,
+        valorTotal: this.venda.valorTotal,
+        formaPagamento: this.venda.formaPagamento,
+        quantidadeItens: this.venda.itens.length
+      },
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ib-estornar-venda-dialog'
+    }).afterClosed().subscribe((resultado: EstornarVendaRequest | null) => {
+      if (!resultado || !this.venda) {
+        return;
+      }
+
+      this.estornandoVenda = true;
+
+      this.vendaService
+        .estornar(this.venda.id, resultado)
+        .pipe(finalize(() => this.estornandoVenda = false))
+        .subscribe({
+          next: (vendaAtualizada) => {
+            this.venda = vendaAtualizada;
+            this.toastService.success('Venda estornada com sucesso.');
+          },
+          error: () => {
+            // O interceptor exibe a mensagem especÃ­fica retornada pelo backend
+            // (403, 409, etc). A venda permanece como estava antes da tentativa.
           }
         });
     });
