@@ -48,7 +48,7 @@ export const routes: Routes = [
       {
         path:        'financeiro',
         canActivate: [roleGuard],
-        data:        { roles: ['Admin'] },
+        data:        { roles: ['Admin', 'Financeiro'] },
         loadComponent: () => import('./pages/financeiro/painel-financeiro/painel-financeiro.component').then(m => m.PainelFinanceiroComponent)
       },
       {

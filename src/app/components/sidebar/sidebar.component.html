@@ -32,11 +32,10 @@
       </a>
     }
 
-    @if (auth.isAdmin()) {
+    @if (auth.isAdmin() || auth.possuiRole('Financeiro')) {
       <a routerLink="/dashboard/financeiro" routerLinkActive="sidebar__link--active" class="sidebar__link">
         <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
         <span class="sidebar__link-text">Painel Financeiro</span>
-        <span class="tag-status">Breve</span>
       </a>
     }
 
