@@ -40,6 +40,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/projetos/projetos-lista/projetos-lista.component').then(m => m.ProjetosListaComponent)
       },
       {
+        path: 'projetos/novo',
+        loadComponent: () => import('./pages/projetos/novo-projeto/novo-projeto.component').then(m => m.NovoProjetoComponent)
+      },
+      {
         path:        'estoque',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Funcionario'] },
