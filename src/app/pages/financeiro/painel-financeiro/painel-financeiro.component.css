@@ -24,21 +24,22 @@
 }
 
 .filters-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   background: #1e1e1e;
-  padding: 15px 20px;
+  padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
 }
 
 .filter-actions {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-top: -15px;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
 }
 
 /* Botões da marca */
@@ -54,7 +55,7 @@
 
 /* Ajustes de tema para mat-form-field */
 .mat-mdc-form-field {
-  width: 200px;
+  width: 100%;
   --mdc-outlined-text-field-input-text-color: var(--ib-white);
   --mdc-outlined-text-field-label-text-color: var(--ib-text-muted);
   --mdc-outlined-text-field-hover-label-text-color: var(--ib-white);
@@ -235,6 +236,51 @@ input.mat-mdc-input-element {
   color: #fff;
 }
 
+/* Transações */
+.transacoes-section {
+  margin-top: 30px;
+}
+
+.table-container {
+  overflow-x: auto;
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.ib-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e0e0e0;
+  min-width: 800px;
+}
+
+.ib-table th, .ib-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-receita { background: rgba(34, 197, 94, 0.2); color: #22C55E; }
+.badge-despesa { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+
+.valor-positivo { color: #22C55E; }
+.valor-negativo { color: #EF4444; }
+
+::ng-deep .mat-mdc-paginator {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border-radius: 8px;
+}
+
 /* Responsividade */
 @media (max-width: 1100px) {
   .cards-grid {
@@ -247,10 +293,6 @@ input.mat-mdc-input-element {
 
 @media (max-width: 768px) {
   .page-header { flex-direction: column; align-items: flex-start; }
-  .filters-container { flex-direction: column; align-items: stretch; }
-  .filter-actions { margin-top: 0; }
-  ::ng-deep .mat-mdc-form-field { width: 100%; }
-
   .cards-grid {
     grid-template-columns: 1fr;
   }

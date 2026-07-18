@@ -6,9 +6,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 import { FinanceiroService } from '../../../services/financeiro.service';
-import { ResumoFinanceiroDetalhado } from '../../../core/models/financeiro.model';
+import {
+  FinanceiroFiltro,
+  ResumoFinanceiroDetalhado,
+  TransacaoFinanceiraResumo,
+  TipoTransacao
+} from '../../../core/models/financeiro.model';
 import { getFormaPagamentoLabel } from '../../../core/utils/forma-pagamento.helper';
 import { FormaPagamento } from '../../../core/models/venda.model';
 
@@ -22,7 +31,10 @@ import { FormaPagamento } from '../../../core/models/venda.model';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    RouterLink
   ],
   templateUrl: './painel-financeiro.component.html',
   styleUrls: ['./painel-financeiro.component.css']
@@ -30,26 +42,48 @@ import { FormaPagamento } from '../../../core/models/venda.model';
 export class PainelFinanceiroComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly financeiroService = inject(FinanceiroService);
+  private readonly auth = inject(AuthService);
+
+  readonly podeAbrirVenda = this.auth.possuiRole('Admin');
 
   readonly periodoForm = this.fb.nonNullable.group({
     dataInicio: ['', Validators.required],
-    dataFim: ['', Validators.required]
+    dataFim: ['', Validators.required],
+    termo: [''],
+    tipo: [null as TipoTransacao | null],
+    categoria: [''],
+    liquidada: [null as boolean | null],
+    formaPagamento: [null as FormaPagamento | null]
   });
 
   resumo: ResumoFinanceiroDetalhado | null = null;
+  transacoes: TransacaoFinanceiraResumo[] = [];
+
+  paginaAtual = 1;
+  tamanhoPagina = 20;
+  totalItens = 0;
+  totalPaginas = 0;
+
   carregando = false;
   erroCarregamento = false;
+
+  carregandoTransacoes = false;
+  erroTransacoes = false;
+
+  tiposTransacao: TipoTransacao[] = ['Receita', 'Despesa'];
+  formasPagamento: FormaPagamento[] = ['Dinheiro', 'Pix', 'CartaoDebito', 'CartaoCredito'];
 
   ngOnInit(): void {
     const hoje = new Date();
     const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
 
-    this.periodoForm.setValue({
+    this.periodoForm.patchValue({
       dataInicio: this.formatarDataInput(primeiroDiaMes),
       dataFim: this.formatarDataInput(hoje)
     });
 
     this.carregarResumo();
+    this.carregarTransacoes();
   }
 
   carregarResumo(): void {
@@ -61,25 +95,10 @@ export class PainelFinanceiroComponent implements OnInit {
       return;
     }
 
-    const { dataInicio, dataFim } = this.periodoForm.getRawValue();
-
-    if (!dataInicio || !dataFim) {
-      return;
-    }
-
-    if (dataInicio > dataFim) {
-      return;
-    }
-
     this.carregando = true;
     this.erroCarregamento = false;
 
-    const filtro = {
-      dataInicio: FinanceiroService.converterDataInicio(dataInicio),
-      dataFim: FinanceiroService.converterDataFimExclusiva(dataFim)
-    };
-
-    this.financeiroService.obterResumo(filtro)
+    this.financeiroService.obterResumo(this.montarFiltro(false))
       .pipe(finalize(() => this.carregando = false))
       .subscribe({
         next: (resultado) => {
@@ -89,6 +108,85 @@ export class PainelFinanceiroComponent implements OnInit {
           this.erroCarregamento = true;
         }
       });
+  }
+
+  carregarTransacoes(): void {
+    if (this.carregandoTransacoes || this.periodoForm.invalid) {
+      return;
+    }
+
+    this.carregandoTransacoes = true;
+    this.erroTransacoes = false;
+
+    this.financeiroService.listarTransacoes(this.montarFiltro(true))
+      .pipe(finalize(() => this.carregandoTransacoes = false))
+      .subscribe({
+        next: (resultado) => {
+          this.transacoes = resultado.itens;
+          this.paginaAtual = resultado.pagina;
+          this.tamanhoPagina = resultado.tamanhoPagina;
+          this.totalItens = resultado.totalItens;
+          this.totalPaginas = resultado.totalPaginas;
+        },
+        error: () => {
+          this.erroTransacoes = true;
+          this.transacoes = [];
+        }
+      });
+  }
+
+  private montarFiltro(incluirPaginacao: boolean): FinanceiroFiltro {
+    const raw = this.periodoForm.getRawValue();
+    const filtro: FinanceiroFiltro = {
+      dataInicio: FinanceiroService.converterDataInicio(raw.dataInicio),
+      dataFim: FinanceiroService.converterDataFimExclusiva(raw.dataFim),
+      termo: raw.termo?.trim() || undefined,
+      tipo: raw.tipo || undefined,
+      categoria: raw.categoria?.trim() || undefined,
+      liquidada: raw.liquidada === null ? undefined : raw.liquidada,
+      formaPagamento: raw.formaPagamento || undefined
+    };
+
+    if (incluirPaginacao) {
+      filtro.pagina = this.paginaAtual;
+      filtro.tamanhoPagina = this.tamanhoPagina;
+    }
+
+    return filtro;
+  }
+
+  aoMudarPagina(event: PageEvent): void {
+    this.paginaAtual = event.pageIndex + 1;
+    this.tamanhoPagina = event.pageSize;
+    this.carregarTransacoes();
+  }
+
+  atualizar(): void {
+    if (this.periodoForm.invalid) {
+      return;
+    }
+    this.paginaAtual = 1;
+    this.carregarResumo();
+    this.carregarTransacoes();
+  }
+
+  limparFiltros(): void {
+    const hoje = new Date();
+    const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+
+    this.periodoForm.patchValue({
+      dataInicio: this.formatarDataInput(primeiroDiaMes),
+      dataFim: this.formatarDataInput(hoje),
+      termo: '',
+      tipo: null,
+      categoria: '',
+      liquidada: null,
+      formaPagamento: null
+    });
+
+    this.paginaAtual = 1;
+    this.carregarResumo();
+    this.carregarTransacoes();
   }
 
   /**

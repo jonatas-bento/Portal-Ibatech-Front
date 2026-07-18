@@ -6,7 +6,7 @@
     </div>
   </div>
 
-  <form class="filters-container ib-dark-form" [formGroup]="periodoForm" (ngSubmit)="carregarResumo()">
+  <form class="filters-container ib-dark-form" [formGroup]="periodoForm" (ngSubmit)="atualizar()">
     <mat-form-field appearance="outline">
       <mat-label>Data inicial</mat-label>
       <input matInput type="date" formControlName="dataInicio">
@@ -17,10 +17,52 @@
       <input matInput type="date" formControlName="dataFim">
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Termo</mat-label>
+      <input matInput formControlName="termo" placeholder="Descrição, categoria, venda ou usuário">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option [value]="null">Todas</mat-option>
+        @for (tipo of tiposTransacao; track tipo) {
+          <mat-option [value]="tipo">{{ tipo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <input matInput formControlName="categoria">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Situação</mat-label>
+      <mat-select formControlName="liquidada">
+        <mat-option [value]="null">Todas</mat-option>
+        <mat-option [value]="true">Liquidada</mat-option>
+        <mat-option [value]="false">Pendente</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Forma de pagamento</mat-label>
+      <mat-select formControlName="formaPagamento">
+        <mat-option [value]="null">Todas</mat-option>
+        @for (forma of formasPagamento; track forma) {
+          <mat-option [value]="forma">{{ getFormaPagamentoLabel(forma) }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     <div class="filter-actions">
-      <button mat-raised-button type="submit" class="btn-brand-primary" [disabled]="carregando">
+      <button mat-raised-button type="submit" class="btn-brand-primary" [disabled]="carregando || carregandoTransacoes">
         <mat-icon>refresh</mat-icon>
-        {{ carregando ? 'Atualizando...' : 'Atualizar' }}
+        Atualizar
+      </button>
+      <button mat-stroked-button type="button" class="btn-brand-secondary" (click)="limparFiltros()">
+        Limpar filtros
       </button>
     </div>
   </form>
@@ -127,4 +169,98 @@
       </div>
     </section>
   }
+
+  <section class="transacoes-section">
+    <div class="section-header">
+      <h2>Movimentações financeiras</h2>
+      <p class="subtitle">Consulte receitas, despesas e estornos registrados no período.</p>
+    </div>
+
+    @if (carregandoTransacoes && transacoes.length === 0) {
+      <div class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Carregando movimentações financeiras...</p>
+      </div>
+    } @else if (erroTransacoes) {
+      <div class="error-state">
+        <mat-icon>error_outline</mat-icon>
+        <p>Não foi possível carregar as movimentações financeiras.</p>
+        <button mat-stroked-button class="btn-brand-secondary" (click)="carregarTransacoes()">
+          <mat-icon>refresh</mat-icon>
+          Tentar novamente
+        </button>
+      </div>
+    } @else if (transacoes.length === 0) {
+      <div class="empty-state">
+        <mat-icon>receipt_long</mat-icon>
+        <p>Nenhuma movimentação encontrada para os filtros selecionados.</p>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="ib-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Categoria</th>
+              <th>Venda</th>
+              <th>Forma de pagamento</th>
+              <th>Responsável</th>
+              <th>Situação</th>
+              <th>Valor</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transacao of transacoes; track transacao.id) {
+              <tr>
+                <td>{{ (transacao.dataPagamento || transacao.dataVencimento) | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ transacao.descricao }}</td>
+                <td>
+                  <span class="badge" [class.badge-receita]="transacao.tipo === 'Receita'" [class.badge-despesa]="transacao.tipo === 'Despesa'">
+                    {{ transacao.tipo }}
+                  </span>
+                </td>
+                <td>{{ transacao.categoria }}</td>
+                <td>
+                  @if (transacao.numeroVenda && transacao.vendaId && podeAbrirVenda) {
+                    <a [routerLink]="['/dashboard/vendas', transacao.vendaId]">{{ transacao.numeroVenda }}</a>
+                  } @else if (transacao.numeroVenda) {
+                    {{ transacao.numeroVenda }}
+                  } @else {
+                    —
+                  }
+                </td>
+                <td>{{ getFormaPagamentoLabel(transacao.formaPagamento!) }}</td>
+                <td>{{ transacao.usuarioNome }}</td>
+                <td>{{ transacao.liquidada ? 'Liquidada' : 'Pendente' }}</td>
+                <td [class.valor-positivo]="transacao.tipo === 'Receita'" [class.valor-negativo]="transacao.tipo === 'Despesa'">
+                  {{ (transacao.tipo === 'Receita' ? '+' : '−') }} {{ transacao.valor | currency:'BRL':'symbol':'1.2-2' }}
+                </td>
+                <td>
+                  @if (transacao.vendaId && podeAbrirVenda) {
+                    <button mat-icon-button [routerLink]="['/dashboard/vendas', transacao.vendaId]" aria-label="Visualizar venda">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  } @else {
+                    —
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="totalItens"
+        [pageIndex]="paginaAtual - 1"
+        [pageSize]="tamanhoPagina"
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        [showFirstLastButtons]="true"
+        (page)="aoMudarPagina($event)">
+      </mat-paginator>
+    }
+  </section>
 </div>
