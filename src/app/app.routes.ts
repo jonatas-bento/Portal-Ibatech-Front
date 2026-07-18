@@ -50,6 +50,18 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/estoque/lista-produtos/lista-produtos.component').then(m => m.ListaProdutosComponent)
       },
       {
+        path:        'estoque/novo',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Funcionario'] },
+        loadComponent: () => import('./pages/estoque/novo-produto/novo-produto.component').then(m => m.NovoProdutoComponent)
+      },
+      {
+        path:        'estoque/:id/movimentar',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Funcionario'] },
+        loadComponent: () => import('./pages/estoque/movimentar-estoque/movimentar-estoque.component').then(m => m.MovimentarEstoqueComponent)
+      },
+      {
         path:        'financeiro',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Financeiro'] },

@@ -2,7 +2,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { ProdutoCreateRequest, ProdutoImportacaoResultado, ProdutoResponse } from '../core/models/produto.model';
+import { ProdutoCreateRequest, ProdutoImportacaoResultado, ProdutoResponse, RegistrarMovimentacaoRequest } from '../core/models/produto.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -45,5 +45,12 @@ private readonly apiUrl = `${environment.apiUrl}/produtos`;
     const formData = new FormData();
     formData.append('arquivo', arquivo, arquivo.name);
     return this.http.post<ProdutoImportacaoResultado>(`${this.apiUrl}/importar`, formData);
+  }
+
+  movimentarProduto(
+    produtoId: string,
+    request: RegistrarMovimentacaoRequest
+  ): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${produtoId}/movimentar`, request);
   }
 }

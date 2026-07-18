@@ -7,6 +7,13 @@ export type TipoProduto =
 
 export type TipoMovimentacao = 'Entrada' | 'Saida' | 'Ajuste';
 
+export type TipoMovimentacaoEstoque = 'Entrada' | 'Saida';
+
+export interface RegistrarMovimentacaoRequest {
+  tipo: TipoMovimentacaoEstoque;
+  quantidade: number;
+}
+
 export interface ProdutoResponse {
   id:               string;
   nome:             string;

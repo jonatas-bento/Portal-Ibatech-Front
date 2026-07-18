@@ -1,0 +1,49 @@
+<div class="container">
+  <header>
+    <h1>Movimentar estoque</h1>
+    <p>Registre uma entrada ou saída manual para o produto selecionado.</p>
+  </header>
+
+  <div class="card">
+    @if (produto) {
+      <div class="produto-info">
+        <p><strong>Produto:</strong> {{ produto.nome }}</p>
+        <p><strong>SKU:</strong> {{ produto.codigoSku || 'N/A' }}</p>
+        <p><strong>Estoque atual:</strong> {{ produto.quantidadeAtual }}</p>
+        <p><small>ID: {{ produtoId }}</small></p>
+      </div>
+    } @else {
+      <div class="produto-info">
+        <p><strong>Produto selecionado:</strong> {{ produtoId }}</p>
+      </div>
+    }
+
+    <p class="aviso">Movimentações alteram diretamente a quantidade disponível em estoque.</p>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tipo de movimentação</mat-label>
+        <mat-select formControlName="tipo">
+          <mat-option value="Entrada">Entrada de estoque</mat-option>
+          <mat-option value="Saida">Saída de estoque</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Quantidade</mat-label>
+        <input matInput type="number" formControlName="quantidade" min="1" step="1">
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || salvando()">
+          @if (salvando()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Confirmar movimentação
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
