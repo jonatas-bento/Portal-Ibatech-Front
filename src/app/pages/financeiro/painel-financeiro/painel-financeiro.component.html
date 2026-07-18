@@ -99,5 +99,32 @@
         </div>
       </div>
     </section>
+
+    <section class="formas-pagamento-section" aria-label="Recebimentos por forma de pagamento">
+      <div class="section-header">
+        <h2>Recebimentos por forma de pagamento</h2>
+        <p class="subtitle">Confira receitas, estornos e resultado líquido por modalidade.</p>
+      </div>
+
+      <div class="cards-grid">
+        @for (forma of resumo.formasPagamento; track forma.formaPagamento) {
+          <div class="card-financeiro card-forma">
+            <mat-icon>{{ iconeFormaPagamento(forma.formaPagamento) }}</mat-icon>
+            <div class="card-info">
+              <span class="card-label">{{ getFormaPagamentoLabel(forma.formaPagamento) }}</span>
+              <span class="card-valor" [class.card-liquido-positivo]="forma.totalLiquido >= 0" [class.card-liquido-negativo]="forma.totalLiquido < 0">
+                {{ forma.totalLiquido | currency:'BRL':'symbol':'1.2-2' }}
+              </span>
+              <div class="card-detalhes">
+                <span>Receitas: {{ forma.totalReceitas | currency:'BRL':'symbol':'1.2-2' }}</span>
+                <span>Estornos: {{ forma.totalEstornos | currency:'BRL':'symbol':'1.2-2' }}</span>
+                <span>Vendas: {{ forma.quantidadeVendas }}</span>
+                <span>Estornos realizados: {{ forma.quantidadeEstornos }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
   }
 </div>

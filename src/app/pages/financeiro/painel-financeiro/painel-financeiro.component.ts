@@ -9,6 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs/operators';
 import { FinanceiroService } from '../../../services/financeiro.service';
 import { ResumoFinanceiroDetalhado } from '../../../core/models/financeiro.model';
+import { getFormaPagamentoLabel } from '../../../core/utils/forma-pagamento.helper';
+import { FormaPagamento } from '../../../core/models/venda.model';
 
 @Component({
   selector: 'app-painel-financeiro',
@@ -98,5 +100,19 @@ export class PainelFinanceiroComponent implements OnInit {
     const mes = (data.getMonth() + 1).toString().padStart(2, '0');
     const dia = data.getDate().toString().padStart(2, '0');
     return `${ano}-${mes}-${dia}`;
+  }
+
+  getFormaPagamentoLabel(forma: FormaPagamento): string {
+    return getFormaPagamentoLabel(forma);
+  }
+
+  iconeFormaPagamento(forma: FormaPagamento): string {
+    switch (forma) {
+      case 'Dinheiro': return 'payments';
+      case 'Pix': return 'qr_code_2';
+      case 'CartaoDebito': return 'credit_card';
+      case 'CartaoCredito': return 'credit_score';
+      default: return 'payment';
+    }
   }
 }
