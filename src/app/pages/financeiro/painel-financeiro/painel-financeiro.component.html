@@ -1,3 +1,103 @@
-<section class="financeiro-page">
-  <h1>Painel Financeiro</h1>
-</section>
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-titles">
+      <h1>Painel Financeiro</h1>
+      <p class="subtitle">Acompanhe receitas, despesas, estornos e resultados do período.</p>
+    </div>
+  </div>
+
+  <form class="filters-container ib-dark-form" [formGroup]="periodoForm" (ngSubmit)="carregarResumo()">
+    <mat-form-field appearance="outline">
+      <mat-label>Data inicial</mat-label>
+      <input matInput type="date" formControlName="dataInicio">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data final</mat-label>
+      <input matInput type="date" formControlName="dataFim">
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-raised-button type="submit" class="btn-brand-primary" [disabled]="carregando">
+        <mat-icon>refresh</mat-icon>
+        {{ carregando ? 'Atualizando...' : 'Atualizar' }}
+      </button>
+    </div>
+  </form>
+
+  @if (carregando && !resumo) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando resumo financeiro...</p>
+    </div>
+  } @else if (erroCarregamento) {
+    <div class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <p>Não foi possível carregar o resumo financeiro.</p>
+      <button mat-stroked-button class="btn-brand-secondary" (click)="carregarResumo()">
+        <mat-icon>refresh</mat-icon>
+        Tentar novamente
+      </button>
+    </div>
+  } @else if (resumo) {
+    <section class="cards-grid" aria-label="Resumo financeiro do período">
+      <div class="card-financeiro card-receitas">
+        <mat-icon>trending_up</mat-icon>
+        <div class="card-info">
+          <span class="card-label">Receitas</span>
+          <span class="card-valor">{{ resumo.totalReceitas | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="card-financeiro card-despesas">
+        <mat-icon>trending_down</mat-icon>
+        <div class="card-info">
+          <span class="card-label">Despesas</span>
+          <span class="card-valor">{{ resumo.totalDespesas | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="card-financeiro card-estornos">
+        <mat-icon>undo</mat-icon>
+        <div class="card-info">
+          <span class="card-label">Estornos</span>
+          <span class="card-valor">{{ resumo.totalEstornos | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="card-financeiro" [class.card-liquido-positivo]="resumo.totalLiquido >= 0" [class.card-liquido-negativo]="resumo.totalLiquido < 0">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <div class="card-info">
+          <span class="card-label">Resultado líquido</span>
+          <span class="card-valor">{{ resumo.totalLiquido | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="indicadores-grid" aria-label="Indicadores operacionais do período">
+      <div class="indicador">
+        <mat-icon>shopping_cart</mat-icon>
+        <div class="indicador-info">
+          <span class="indicador-label">Vendas no período</span>
+          <span class="indicador-valor">{{ resumo.quantidadeVendas }}</span>
+        </div>
+      </div>
+
+      <div class="indicador">
+        <mat-icon>assignment_return</mat-icon>
+        <div class="indicador-info">
+          <span class="indicador-label">Estornos realizados</span>
+          <span class="indicador-valor">{{ resumo.quantidadeEstornos }}</span>
+        </div>
+      </div>
+
+      <div class="indicador">
+        <mat-icon>receipt_long</mat-icon>
+        <div class="indicador-info">
+          <span class="indicador-label">Ticket médio</span>
+          <span class="indicador-valor">{{ resumo.ticketMedio | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+    </section>
+  }
+</div>

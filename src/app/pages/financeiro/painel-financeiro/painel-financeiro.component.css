@@ -1,0 +1,228 @@
+.page-container {
+  padding: 20px;
+  color: #e0e0e0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header-titles h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #fff;
+}
+
+.subtitle {
+  margin: 5px 0 0;
+  color: #b0b0b0;
+}
+
+.filters-container {
+  display: flex;
+  gap: 15px;
+  background: #1e1e1e;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: -15px;
+}
+
+/* Botões da marca */
+.btn-brand-primary {
+  background-color: #00e676 !important;
+  color: #121212 !important;
+}
+
+.btn-brand-secondary {
+  border: 1px solid #00e676 !important;
+  color: #00e676 !important;
+}
+
+/* Ajustes de tema para mat-form-field */
+.mat-mdc-form-field {
+  width: 200px;
+  --mdc-outlined-text-field-input-text-color: var(--ib-white);
+  --mdc-outlined-text-field-label-text-color: var(--ib-text-muted);
+  --mdc-outlined-text-field-hover-label-text-color: var(--ib-white);
+  --mdc-outlined-text-field-focus-label-text-color: var(--ib-green);
+  --mdc-outlined-text-field-outline-color: var(--ib-border);
+  --mdc-outlined-text-field-hover-outline-color: var(--ib-text-muted);
+  --mdc-outlined-text-field-focus-outline-color: var(--ib-green);
+  --mdc-outlined-text-field-caret-color: var(--ib-green);
+}
+
+.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background-color: var(--ib-surface-3);
+}
+
+input.mat-mdc-input-element {
+  -webkit-text-fill-color: var(--ib-white);
+}
+
+/* Loading / erro */
+.loading-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #b0b0b0;
+  gap: 10px;
+  background: #1e1e1e;
+  border-radius: 8px;
+}
+
+.error-state mat-icon {
+  color: var(--ib-danger, #EF4444);
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Cards financeiros principais */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card-financeiro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1e1e1e;
+  border: 1px solid var(--ib-border, #333);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.card-financeiro mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-label {
+  font-size: 13px;
+  color: #b0b0b0;
+}
+
+.card-valor {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card-receitas mat-icon {
+  color: var(--ib-success, #22C55E);
+}
+
+.card-despesas mat-icon {
+  color: var(--ib-danger, #EF4444);
+}
+
+.card-estornos mat-icon {
+  color: var(--ib-warning, #F59E0B);
+}
+
+.card-liquido-positivo mat-icon {
+  color: var(--ib-green, #00e676);
+}
+
+.card-liquido-negativo mat-icon {
+  color: var(--ib-danger, #EF4444);
+}
+
+.card-liquido-positivo .card-valor {
+  color: var(--ib-green, #00e676);
+}
+
+.card-liquido-negativo .card-valor {
+  color: var(--ib-danger, #EF4444);
+}
+
+/* Indicadores operacionais */
+.indicadores-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.indicador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #181818;
+  border: 1px solid var(--ib-border, #333);
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+
+.indicador mat-icon {
+  color: var(--ib-text-muted, #6B7280);
+  font-size: 26px;
+  width: 26px;
+  height: 26px;
+}
+
+.indicador-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.indicador-label {
+  font-size: 12px;
+  color: #b0b0b0;
+}
+
+.indicador-valor {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Responsividade */
+@media (max-width: 1100px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .indicadores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .filters-container { flex-direction: column; align-items: stretch; }
+  .filter-actions { margin-top: 0; }
+  ::ng-deep .mat-mdc-form-field { width: 100%; }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .indicadores-grid {
+    grid-template-columns: 1fr;
+  }
+}
