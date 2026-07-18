@@ -1,37 +1,129 @@
-.container {
-  padding: 20px;
-  max-width: 600px;
+.movimentacao-page {
+  padding: 24px;
+  max-width: 1050px;
   margin: 0 auto;
+  color: var(--ib-text);
+
+  .page-header {
+    margin-bottom: 24px;
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      h1 { font-family: var(--ff-display); font-size: 24px; margin: 0; }
+      .subtitle { color: var(--ib-text-muted); margin: 0; }
+      mat-icon { color: var(--ib-green-neon); font-size: 32px; width: 32px; height: 32px; }
+    }
+  }
+
+  .movimentacao-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .movimentacao-card {
+    background: var(--ib-surface);
+    border: 1px solid var(--ib-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--ib-green-neon);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+  }
+
+  .produto-context {
+    background: var(--ib-surface-2);
+    border: 1px solid var(--ib-border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: center;
+
+    mat-icon { color: var(--ib-text-muted); }
+    .label { font-size: 10px; color: var(--ib-text-muted); letter-spacing: 1px; text-transform: uppercase; }
+    h3 { margin: 4px 0; font-size: 16px; }
+    p { margin: 0; font-size: 13px; color: var(--ib-text-muted); }
+  }
+
+  .aviso-impacto {
+    background: var(--ib-warning-soft);
+    border: 1px solid var(--ib-warning);
+    color: var(--ib-warning);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+
+    .btn-cancelar {
+      color: var(--ib-text);
+      border: 1px solid var(--ib-border);
+      &:hover { background: var(--ib-surface-3); }
+    }
+
+    .btn-confirmar {
+      background: var(--ib-green-neon);
+      color: #000;
+      font-weight: 600;
+      &:disabled { opacity: 0.5; }
+    }
+  }
+
+  .orientacoes-card {
+    background: var(--ib-surface);
+    border: 1px solid var(--ib-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    height: fit-content;
+
+    h3 { font-size: 16px; margin-bottom: 16px; }
+    .orientacao-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      strong { display: block; color: var(--ib-text); }
+      p { color: var(--ib-text-muted); margin: 0; }
+      .text-success { color: var(--ib-success); }
+      .text-danger { color: var(--ib-danger); }
+      .text-warning { color: var(--ib-warning); }
+    }
+  }
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.produto-info {
-  margin-bottom: 20px;
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 4px;
-}
-
-.aviso {
-  color: #666;
-  font-size: 0.9em;
-  margin-bottom: 20px;
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+.ib-dark-form {
+  .mat-mdc-form-field {
+    --mdc-outlined-text-field-input-text-color: var(--ib-text);
+    --mdc-outlined-text-field-label-text-color: var(--ib-text-muted);
+    --mdc-outlined-text-field-focus-label-text-color: var(--ib-green-neon);
+    --mdc-outlined-text-field-outline-color: var(--ib-border);
+    --mdc-outlined-text-field-focus-outline-color: var(--ib-green-neon);
+    --mdc-outlined-text-field-caret-color: var(--ib-green-neon);
+  }
+  .mat-mdc-text-field-wrapper { background: var(--ib-surface-2) !important; }
+  input, .mat-mdc-select-value { color: var(--ib-text) !important; }
 }

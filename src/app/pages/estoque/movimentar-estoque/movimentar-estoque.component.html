@@ -1,49 +1,97 @@
-<div class="container">
-  <header>
-    <h1>Movimentar estoque</h1>
-    <p>Registre uma entrada ou saída manual para o produto selecionado.</p>
+<section class="movimentacao-page">
+  <header class="page-header">
+    <div class="header-content">
+      <mat-icon>inventory_2</mat-icon>
+      <div>
+        <h1>Movimentar estoque</h1>
+        <p class="subtitle">Registre uma entrada ou saída manual para o produto selecionado.</p>
+      </div>
+    </div>
   </header>
 
-  <div class="card">
-    @if (produto) {
-      <div class="produto-info">
-        <p><strong>Produto:</strong> {{ produto.nome }}</p>
-        <p><strong>SKU:</strong> {{ produto.codigoSku || 'N/A' }}</p>
-        <p><strong>Estoque atual:</strong> {{ produto.quantidadeAtual }}</p>
-        <p><small>ID: {{ produtoId }}</small></p>
+  <div class="movimentacao-layout">
+    <form [formGroup]="form" (ngSubmit)="salvar()" class="movimentacao-card ib-dark-form">
+      <div class="produto-context">
+        <mat-icon>inventory</mat-icon>
+        <div class="produto-details">
+          <span class="label">PRODUTO SELECIONADO</span>
+          @if (produto) {
+            <h3>{{ produto.nome }}</h3>
+            <p>SKU: {{ produto.codigoSku || 'N/A' }} | Estoque: {{ produto.quantidadeAtual }}</p>
+          } @else {
+            <h3>Produto selecionado</h3>
+            <p>Código: {{ produtoId }}</p>
+          }
+        </div>
       </div>
-    } @else {
-      <div class="produto-info">
-        <p><strong>Produto selecionado:</strong> {{ produtoId }}</p>
+
+      <div class="aviso-impacto">
+        <mat-icon>warning_amber</mat-icon>
+        <p>Movimentações alteram diretamente a quantidade disponível em estoque.</p>
       </div>
-    }
 
-    <p class="aviso">Movimentações alteram diretamente a quantidade disponível em estoque.</p>
-
-    <form [formGroup]="form" (ngSubmit)="salvar()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Tipo de movimentação</mat-label>
         <mat-select formControlName="tipo">
           <mat-option value="Entrada">Entrada de estoque</mat-option>
           <mat-option value="Saida">Saída de estoque</mat-option>
         </mat-select>
+        @if (form.get('tipo')?.invalid && form.get('tipo')?.touched) {
+          <mat-error>Selecione o tipo de movimentação.</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Quantidade</mat-label>
         <input matInput type="number" formControlName="quantidade" min="1" step="1">
+        @if (form.get('quantidade')?.hasError('required')) {
+          <mat-error>Informe a quantidade.</mat-error>
+        }
+        @if (form.get('quantidade')?.hasError('min')) {
+          <mat-error>A quantidade deve ser maior que zero.</mat-error>
+        }
+        @if (form.get('quantidade')?.hasError('pattern')) {
+          <mat-error>A quantidade deve ser um número inteiro.</mat-error>
+        }
       </mat-form-field>
 
       <div class="actions">
-        <button mat-button type="button" (click)="cancelar()">Cancelar</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || salvando()">
+        <button mat-button type="button" (click)="cancelar()" class="btn-cancelar">
+          <mat-icon>arrow_back</mat-icon> Cancelar
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || salvando()" class="btn-confirmar">
           @if (salvando()) {
             <mat-spinner diameter="20"></mat-spinner>
           } @else {
-            Confirmar movimentação
+            <mat-icon>sync_alt</mat-icon> Confirmar movimentação
           }
         </button>
       </div>
     </form>
+
+    <aside class="orientacoes-card">
+      <h3>Como funciona</h3>
+      <div class="orientacao-item">
+        <mat-icon class="text-success">add_circle</mat-icon>
+        <div>
+          <strong>Entrada</strong>
+          <p>Adiciona unidades ao estoque disponível.</p>
+        </div>
+      </div>
+      <div class="orientacao-item">
+        <mat-icon class="text-danger">remove_circle</mat-icon>
+        <div>
+          <strong>Saída</strong>
+          <p>Retira unidades do estoque disponível.</p>
+        </div>
+      </div>
+      <div class="orientacao-item">
+        <mat-icon class="text-warning">info</mat-icon>
+        <div>
+          <strong>Atenção</strong>
+          <p>Saídas acima da quantidade disponível serão rejeitadas pelo sistema.</p>
+        </div>
+      </div>
+    </aside>
   </div>
-</div>
+</section>
