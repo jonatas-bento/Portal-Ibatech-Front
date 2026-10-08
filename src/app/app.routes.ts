@@ -56,6 +56,15 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/estoque/novo-produto/novo-produto.component').then(m => m.NovoProdutoComponent)
       },
       {
+        path:        'estoque/:id/editar',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Funcionario'] },
+        loadComponent: () =>
+          import('./pages/estoque/editar-produto/editar-produto.component')
+            .then(m => m.EditarProdutoComponent),
+        title: 'Editar Produto — IBATECH',
+      },
+      {
         path:        'estoque/:id/movimentar',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Funcionario'] },

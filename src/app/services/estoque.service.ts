@@ -2,7 +2,13 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { ProdutoCreateRequest, ProdutoImportacaoResultado, ProdutoResponse, RegistrarMovimentacaoRequest } from '../core/models/produto.model';
+import {
+  ProdutoCreateRequest,
+  ProdutoImportacaoResultado,
+  ProdutoResponse,
+  ProdutoUpdateRequest,
+  RegistrarMovimentacaoRequest
+} from '../core/models/produto.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -39,6 +45,28 @@ private readonly apiUrl = `${environment.apiUrl}/produtos`;
     return this.http.post<ProdutoResponse>(this.apiUrl, dto).pipe(
       tap(novo => this._produtos.update(atual => [novo, ...atual]))
     );
+  }
+
+  atualizar(
+    produtoId: string,
+    dto: ProdutoUpdateRequest
+  ): Observable<ProdutoResponse> {
+    return this.http
+      .put<ProdutoResponse>(
+        `${this.apiUrl}/${produtoId}`,
+        dto
+      )
+      .pipe(
+        tap(atualizado => {
+          this._produtos.update(lista =>
+            lista.map(produto =>
+              produto.id === atualizado.id
+                ? atualizado
+                : produto
+            )
+          );
+        })
+      );
   }
 
   importarProdutos(arquivo: File): Observable<ProdutoImportacaoResultado> {

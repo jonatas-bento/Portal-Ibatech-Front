@@ -228,3 +228,60 @@
     }
 }
 }
+// ==========================================================================
+// Complementos comerciais da tabela de produtos
+// ==========================================================================
+
+.product-secondary {
+  display: block;
+  margin-top: 3px;
+  color: #687781;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.product-muted {
+  color: #62727d;
+  font-size: 12px;
+}
+
+.cost-value {
+  color: #aeb8bf !important;
+}
+
+.sale-value {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.stock-minimum {
+  display: block;
+  margin-top: 3px;
+  color: #62727d;
+  font-size: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+@media (max-width: 1200px) {
+  .app-table {
+    min-width: 1050px;
+  }
+}
+
+@media (max-width: 768px) {
+  .actions-wrapper {
+    align-items: flex-end !important;
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .action-buttons {
+    flex-wrap: nowrap;
+  }
+}
