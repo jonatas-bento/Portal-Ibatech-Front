@@ -32,6 +32,37 @@
       </a>
     }
 
+    @if (auth.isAdmin() || auth.possuiRole('Estoque')) {
+      <a
+        routerLink="/dashboard/compras"
+        routerLinkActive="sidebar__link--active"
+        class="sidebar__link">
+
+        <svg
+          class="menu-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 3h2l.4 2"></path>
+          <path d="M7 13h10l4-8H5.4"></path>
+          <circle cx="9" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+        </svg>
+
+        <span class="sidebar__link-text">
+          Entradas de Compra
+        </span>
+
+      </a>
+    }
+
     @if (auth.isAdmin() || auth.possuiRole('Financeiro')) {
       <a routerLink="/dashboard/financeiro" routerLinkActive="sidebar__link--active" class="sidebar__link">
         <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>

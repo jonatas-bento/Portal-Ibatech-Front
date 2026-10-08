@@ -1,0 +1,239 @@
+<div class="page-container">
+
+  <div class="page-header">
+
+    <div>
+      <h1>
+        Entradas de Compra
+      </h1>
+
+      <p class="subtitle">
+        Compras, custos, fretes e entrada física de produtos no estoque.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="btn-brand-secondary"
+        (click)="importarCompra()">
+
+        <mat-icon>upload_file</mat-icon>
+        Importar XLSX
+      </button>
+
+      <button
+        mat-raised-button
+        type="button"
+        class="btn-brand-primary"
+        (click)="novaEntrada()">
+
+        <mat-icon>add_business</mat-icon>
+        Nova entrada
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="filters-card">
+
+    <div class="search-wrap">
+      <mat-icon>search</mat-icon>
+
+      <input
+        type="text"
+        [(ngModel)]="filtroTexto"
+        (ngModelChange)="aplicarFiltros()"
+        placeholder="Documento ou fornecedor">
+    </div>
+
+    <select
+      [(ngModel)]="filtroStatus"
+      (ngModelChange)="aplicarFiltros()">
+
+      <option value="">
+        Todos os status
+      </option>
+
+      <option value="Rascunho">
+        Rascunho
+      </option>
+
+      <option value="Confirmada">
+        Confirmada
+      </option>
+
+      <option value="Cancelada">
+        Cancelada
+      </option>
+    </select>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="btn-brand-secondary"
+      (click)="limparFiltros()">
+
+      Limpar
+    </button>
+
+  </div>
+
+  <div class="table-container">
+
+    @if (loading) {
+
+      <div class="state">
+        <mat-spinner diameter="40">
+        </mat-spinner>
+
+        <p>
+          Carregando entradas...
+        </p>
+      </div>
+
+    } @else if (
+      entradasFiltradas.length === 0
+    ) {
+
+      <div class="state">
+        <mat-icon class="state-icon">
+          inventory_2
+        </mat-icon>
+
+        <p>
+          Nenhuma entrada encontrada.
+        </p>
+      </div>
+
+    } @else {
+
+      <table class="data-table">
+
+        <thead>
+          <tr>
+            <th>Documento</th>
+            <th>Fornecedor</th>
+            <th>Data</th>
+            <th>Status</th>
+
+            <th class="text-right">
+              Produtos
+            </th>
+
+            <th class="text-right">
+              Frete
+            </th>
+
+            <th class="text-right">
+              Total
+            </th>
+
+            <th class="text-center">
+              Ações
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            entrada of entradasFiltradas;
+            track entrada.id
+          ) {
+
+            <tr>
+
+              <td class="documento">
+                {{ entrada.numeroDocumento }}
+              </td>
+
+              <td>
+                {{ entrada.fornecedorNome }}
+              </td>
+
+              <td class="nowrap">
+                {{
+                  entrada.dataEntrada
+                    | date:'dd/MM/yyyy'
+                }}
+              </td>
+
+              <td>
+
+                <span
+                  class="status"
+                  [class.status--draft]="
+                    entrada.status === 'Rascunho'
+                  "
+                  [class.status--confirmed]="
+                    entrada.status === 'Confirmada'
+                  ">
+
+                  {{ statusLabel(entrada.status) }}
+
+                </span>
+
+              </td>
+
+              <td class="text-right nowrap">
+                {{
+                  entrada.valorProdutos
+                    | currency:'BRL':'symbol':'1.2-2'
+                }}
+              </td>
+
+              <td class="text-right nowrap">
+                {{
+                  entrada.valorFrete
+                    | currency:'BRL':'symbol':'1.2-2'
+                }}
+              </td>
+
+              <td class="text-right nowrap total">
+                {{
+                  entrada.valorTotal
+                    | currency:'BRL':'symbol':'1.2-2'
+                }}
+              </td>
+
+              <td class="text-center">
+
+                <a
+                  class="btn-icon"
+                  [routerLink]="[
+                    '/dashboard/compras',
+                    entrada.id
+                  ]"
+                  [matTooltip]="
+                    entrada.status === 'Rascunho'
+                      ? 'Editar entrada'
+                      : 'Consultar entrada'
+                  ">
+
+                  <mat-icon>
+                    {{
+                      entrada.status === 'Rascunho'
+                        ? 'edit'
+                        : 'visibility'
+                    }}
+                  </mat-icon>
+
+                </a>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+      </table>
+    }
+
+  </div>
+
+</div>

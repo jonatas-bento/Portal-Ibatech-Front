@@ -1,0 +1,256 @@
+.page-container {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.65rem;
+  }
+
+  .subtitle {
+    margin: 0.35rem 0 0;
+    color: #87959f;
+    font-size: 13px;
+  }
+}
+
+.btn-back {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  color: #a8b3ba;
+  background: #07090e;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 9px;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+    background:
+      rgba(255, 255, 255, 0.04);
+  }
+}
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+
+  background:
+    rgba(89, 255, 35, 0.035);
+
+  border:
+    1px solid rgba(89, 255, 35, 0.16);
+
+  border-radius: 10px;
+
+  mat-icon {
+    color: #59ff23;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  strong {
+    color: #e8eef1;
+    font-size: 13px;
+  }
+
+  span {
+    color: #82919a;
+    font-size: 12px;
+  }
+}
+
+.form-card {
+  padding: 1.5rem;
+
+  background: #07090e;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 12px;
+
+  section + section {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+
+    border-top:
+      1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  h2 {
+    margin: 0 0 1rem;
+
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.section-description {
+  margin:
+    -0.5rem 0 1.1rem;
+
+  color: #71808a;
+  font-size: 12px;
+}
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  &--three {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .span-2 {
+    grid-column:
+      span 2;
+  }
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+
+    &--three {
+      grid-template-columns: 1fr;
+    }
+
+    .span-2 {
+      grid-column:
+        span 1;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 0.75rem;
+
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  @media (max-width: 560px) {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.btn-brand-primary {
+  background:
+    #59ff23 !important;
+
+  color:
+    #071006 !important;
+
+  font-weight: 700;
+}
+
+.btn-secondary {
+  border-color:
+    rgba(255, 255, 255, 0.13) !important;
+
+  color:
+    #bdc7cd !important;
+}
+
+// ==========================================================================
+// Angular Material - correções para o tema escuro da Ibatech
+// ==========================================================================
+
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mdc-floating-label {
+  color: #aeb8bf !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: #59ff23 !important;
+}
+
+:host ::ng-deep .mat-mdc-input-element,
+:host ::ng-deep .mat-mdc-select-value-text,
+:host ::ng-deep .mat-mdc-select-value {
+  color: #ffffff !important;
+}
+
+:host ::ng-deep .mat-mdc-input-element::placeholder {
+  color: #66757f !important;
+  opacity: 1;
+}
+
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #59ff23 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-prefix,
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-text-prefix {
+  color: #b9c3c9 !important;
+}

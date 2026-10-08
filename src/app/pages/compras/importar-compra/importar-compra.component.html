@@ -1,0 +1,293 @@
+<div class="dialog-container">
+
+  <div class="dialog-header">
+
+    <div>
+      <h2>
+        Importar compra por planilha
+      </h2>
+
+      <p>
+        Crie os produtos e um rascunho de entrada para revisão antes da confirmação.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="close-button"
+      (click)="cancelar()"
+      [disabled]="importando">
+
+      <mat-icon>
+        close
+      </mat-icon>
+    </button>
+
+  </div>
+
+  <div class="warning-box">
+
+    <mat-icon>
+      inventory
+    </mat-icon>
+
+    <div>
+      <strong>
+        A importação não movimenta estoque.
+      </strong>
+
+      <span>
+        Os produtos serão criados com saldo zero. O estoque só aumenta após confirmar a entrada.
+      </span>
+    </div>
+
+  </div>
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="importar()">
+
+    <div class="form-grid">
+
+      <mat-form-field
+        appearance="outline"
+        class="full-span">
+
+        <mat-label>
+          Fornecedor
+        </mat-label>
+
+        <mat-select
+          formControlName="fornecedorId">
+
+          <mat-option [value]="null">
+            Selecione o fornecedor
+          </mat-option>
+
+          @for (
+            fornecedor of fornecedores;
+            track fornecedor.id
+          ) {
+
+            <mat-option
+              [value]="fornecedor.id">
+
+              {{
+                fornecedor.nomeFantasia
+                  || fornecedor.nome
+              }}
+
+              @if (fornecedor.documento) {
+                — {{ fornecedor.documento }}
+              }
+
+            </mat-option>
+          }
+
+        </mat-select>
+
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Número do documento
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="numeroDocumento"
+          placeholder="000602/2026">
+
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Data da entrada
+        </mat-label>
+
+        <input
+          matInput
+          type="date"
+          formControlName="dataEntrada">
+
+      </mat-form-field>
+
+    </div>
+
+    <div class="cost-grid">
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Frete
+        </mat-label>
+
+        <span matTextPrefix>
+          R$&nbsp;
+        </span>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="valorFrete">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Desconto
+        </mat-label>
+
+        <span matTextPrefix>
+          R$&nbsp;
+        </span>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="valorDesconto">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Outras despesas
+        </mat-label>
+
+        <span matTextPrefix>
+          R$&nbsp;
+        </span>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="outrasDespesas">
+
+      </mat-form-field>
+
+    </div>
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Observação
+      </mat-label>
+
+      <textarea
+        matInput
+        rows="3"
+        formControlName="observacao">
+      </textarea>
+
+    </mat-form-field>
+
+    <div class="file-area">
+
+      <input
+        #arquivoInput
+        type="file"
+        accept=".xlsx"
+        hidden
+        (change)="selecionarArquivo($event)">
+
+      <button
+        type="button"
+        class="file-button"
+        (click)="arquivoInput.click()"
+        [disabled]="importando">
+
+        <mat-icon>
+          upload_file
+        </mat-icon>
+
+        Selecionar XLSX
+      </button>
+
+      <div class="file-info">
+
+        @if (arquivo) {
+
+          <strong>
+            {{ arquivo.name }}
+          </strong>
+
+          <span>
+            {{
+              arquivo.size / 1024
+                | number:'1.0-0'
+            }} KB
+          </span>
+
+        } @else {
+
+          <span>
+            Nenhum arquivo selecionado
+          </span>
+
+        }
+
+      </div>
+
+    </div>
+
+    <div class="dialog-actions">
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="btn-secondary"
+        (click)="cancelar()"
+        [disabled]="importando">
+
+        Cancelar
+      </button>
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="btn-brand-primary"
+        [disabled]="
+          form.invalid ||
+          !arquivo ||
+          importando ||
+          carregandoFornecedores
+        ">
+
+        @if (importando) {
+
+          <mat-spinner
+            diameter="18">
+          </mat-spinner>
+
+          Importando...
+
+        } @else {
+
+          <mat-icon>
+            upload
+          </mat-icon>
+
+          Importar compra
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

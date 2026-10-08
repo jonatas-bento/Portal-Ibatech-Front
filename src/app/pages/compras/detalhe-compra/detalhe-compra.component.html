@@ -1,0 +1,809 @@
+<div class="page-container">
+
+  @if (loading) {
+
+    <div class="state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando entrada de compra...</p>
+    </div>
+
+  } @else if (entrada) {
+
+    <div class="page-header">
+
+      <div class="title-wrap">
+
+        <button
+          type="button"
+          class="btn-back"
+          (click)="voltar()">
+
+          <mat-icon>
+            arrow_back
+          </mat-icon>
+        </button>
+
+        <div>
+
+          <h1>
+            Entrada
+            {{ entrada.numeroDocumento }}
+          </h1>
+
+          <p class="subtitle">
+
+            {{
+              podeEditar
+                ? 'Rascunho editável da entrada de compra'
+                : 'Entrada confirmada — somente consulta'
+            }}
+
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="header-actions">
+
+        <span
+          class="status"
+          [class.status--draft]="
+            entrada.status === 'Rascunho'
+          "
+          [class.status--confirmed]="
+            entrada.status === 'Confirmada'
+          ">
+
+          {{ entrada.status }}
+
+        </span>
+
+        @if (podeEditar) {
+
+          <button
+            mat-raised-button
+            type="button"
+            class="btn-confirm"
+            (click)="confirmarEntrada()"
+            [disabled]="
+              confirmando ||
+              entrada.itens.length === 0
+            ">
+
+            @if (confirmando) {
+              <mat-spinner
+                diameter="18">
+              </mat-spinner>
+            } @else {
+              <mat-icon>
+                inventory
+              </mat-icon>
+            }
+
+            {{
+              confirmando
+                ? 'Confirmando...'
+                : 'Confirmar entrada'
+            }}
+
+          </button>
+
+        }
+
+      </div>
+
+    </div>
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <label>
+          Fornecedor
+        </label>
+
+        <strong>
+          {{ entrada.fornecedorNome }}
+        </strong>
+
+      </div>
+
+      <div class="summary-card">
+
+        <label>
+          Documento
+        </label>
+
+        <strong>
+          {{ entrada.numeroDocumento }}
+        </strong>
+
+      </div>
+
+      <div class="summary-card">
+
+        <label>
+          Data da entrada
+        </label>
+
+        <strong>
+          {{
+            entrada.dataEntrada
+              | date:'dd/MM/yyyy'
+          }}
+        </strong>
+
+      </div>
+
+      <div class="summary-card">
+
+        <label>
+          Itens
+        </label>
+
+        <strong>
+          {{ entrada.itens.length }}
+        </strong>
+
+      </div>
+
+    </div>
+
+    <div class="totals-grid">
+
+      <div class="total-card">
+        <span>Produtos</span>
+
+        <strong>
+          {{
+            entrada.valorProdutos
+              | currency:'BRL':'symbol':'1.2-2'
+          }}
+        </strong>
+      </div>
+
+      <div class="total-card">
+        <span>Frete</span>
+
+        <strong>
+          {{
+            entrada.valorFrete
+              | currency:'BRL':'symbol':'1.2-2'
+          }}
+        </strong>
+      </div>
+
+      <div class="total-card">
+        <span>Desconto</span>
+
+        <strong>
+          {{
+            entrada.valorDesconto
+              | currency:'BRL':'symbol':'1.2-2'
+          }}
+        </strong>
+      </div>
+
+      <div class="total-card">
+        <span>
+          Outras despesas
+        </span>
+
+        <strong>
+          {{
+            entrada.outrasDespesas
+              | currency:'BRL':'symbol':'1.2-2'
+          }}
+        </strong>
+      </div>
+
+      <div
+        class="total-card
+               total-card--main">
+
+        <span>Total</span>
+
+        <strong>
+          {{
+            entrada.valorTotal
+              | currency:'BRL':'symbol':'1.2-2'
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+    @if (podeEditar) {
+
+      <div class="editor-card">
+
+        <div class="section-header">
+
+          <div>
+            <h2>
+              Dados da entrada
+            </h2>
+
+            <p>
+              Documento, data e custos adicionais podem ser ajustados enquanto a compra estiver em rascunho.
+            </p>
+          </div>
+
+        </div>
+
+        <form
+          [formGroup]="cabecalhoForm"
+          (ngSubmit)="salvarCabecalho()">
+
+          <div class="form-grid">
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                Número do documento
+              </mat-label>
+
+              <input
+                matInput
+                formControlName="numeroDocumento">
+
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                Data da entrada
+              </mat-label>
+
+              <input
+                matInput
+                type="date"
+                formControlName="dataEntrada">
+
+            </mat-form-field>
+
+          </div>
+
+          <div class="cost-grid">
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                Frete
+              </mat-label>
+
+              <span matTextPrefix>
+                R$&nbsp;
+              </span>
+
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                min="0"
+                formControlName="valorFrete">
+
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                Desconto
+              </mat-label>
+
+              <span matTextPrefix>
+                R$&nbsp;
+              </span>
+
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                min="0"
+                formControlName="valorDesconto">
+
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                Outras despesas
+              </mat-label>
+
+              <span matTextPrefix>
+                R$&nbsp;
+              </span>
+
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                min="0"
+                formControlName="outrasDespesas">
+
+            </mat-form-field>
+
+          </div>
+
+          <mat-form-field
+            appearance="outline"
+            class="full-width">
+
+            <mat-label>
+              Observação
+            </mat-label>
+
+            <textarea
+              matInput
+              rows="3"
+              formControlName="observacao">
+            </textarea>
+
+          </mat-form-field>
+
+          <div class="form-actions">
+
+            <button
+              mat-raised-button
+              type="submit"
+              class="btn-brand-primary"
+              [disabled]="
+                cabecalhoForm.invalid ||
+                salvandoCabecalho
+              ">
+
+              <mat-icon>
+                save
+              </mat-icon>
+
+              {{
+                salvandoCabecalho
+                  ? 'Salvando...'
+                  : 'Salvar dados'
+              }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    }
+
+    <div class="items-card">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            Itens da compra
+          </h2>
+
+          <p>
+            {{
+              podeEditar
+                ? 'Revise quantidades e preços antes de confirmar a entrada.'
+                : 'Histórico consolidado desta entrada de compra.'
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+      @if (podeEditar) {
+
+        <div class="add-item-card">
+
+          <h3>
+            Adicionar produto
+          </h3>
+
+          <form
+            [formGroup]="itemForm"
+            (ngSubmit)="adicionarItem()">
+
+            <div class="item-form-grid">
+
+              <mat-form-field
+                appearance="outline"
+                class="product-field">
+
+                <mat-label>
+                  Produto
+                </mat-label>
+
+                <mat-select
+                  formControlName="produtoId"
+                  (selectionChange)="
+                    aoSelecionarProduto()
+                  ">
+
+                  <mat-option [value]="null">
+                    Selecione um produto
+                  </mat-option>
+
+                  @for (
+                    produto of produtosDisponiveis;
+                    track produto.id
+                  ) {
+
+                    <mat-option
+                      [value]="produto.id">
+
+                      {{
+                        produto.codigoSku
+                          || 'SEM SKU'
+                      }}
+                      —
+                      {{ produto.nome }}
+
+                    </mat-option>
+
+                  }
+
+                </mat-select>
+
+              </mat-form-field>
+
+              <mat-form-field
+                appearance="outline">
+
+                <mat-label>
+                  Quantidade
+                </mat-label>
+
+                <input
+                  matInput
+                  type="number"
+                  min="1"
+                  step="1"
+                  formControlName="quantidade">
+
+              </mat-form-field>
+
+              <mat-form-field
+                appearance="outline">
+
+                <mat-label>
+                  Preço compra
+                </mat-label>
+
+                <span matTextPrefix>
+                  R$&nbsp;
+                </span>
+
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  formControlName="precoUnitarioCompra">
+
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                type="submit"
+                class="btn-brand-primary add-button"
+                [disabled]="
+                  itemForm.invalid ||
+                  adicionandoItem
+                ">
+
+                <mat-icon>
+                  add
+                </mat-icon>
+
+                {{
+                  adicionandoItem
+                    ? 'Adicionando...'
+                    : 'Adicionar'
+                }}
+
+              </button>
+
+            </div>
+
+          </form>
+
+          @if (produtoSelecionado) {
+
+            <div class="selected-product-info">
+
+              <span>
+                Custo atual:
+                <strong>
+                  {{
+                    produtoSelecionado.precoCompra
+                      | currency:'BRL':'symbol':'1.2-2'
+                  }}
+                </strong>
+              </span>
+
+              <span>
+                Estoque atual:
+                <strong>
+                  {{
+                    produtoSelecionado.quantidadeAtual
+                  }}
+                </strong>
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      @if (entrada.itens.length === 0) {
+
+        <div class="empty-state">
+
+          <mat-icon>
+            inventory_2
+          </mat-icon>
+
+          <p>
+            Nenhum item adicionado.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="table-responsive">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Produto</th>
+
+                <th class="text-right">
+                  Qtd.
+                </th>
+
+                <th class="text-right">
+                  Preço fornecedor
+                </th>
+
+                <th class="text-right">
+                  Frete rateado
+                </th>
+
+                <th class="text-right">
+                  Custo efetivo
+                </th>
+
+                <th class="text-right">
+                  Total produto
+                </th>
+
+                @if (podeEditar) {
+                  <th class="text-center">
+                    Ações
+                  </th>
+                }
+
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                item of entrada.itens;
+                track item.id
+              ) {
+
+                <tr>
+
+                  <td class="sku">
+                    {{
+                      item.codigoSku
+                        || 'SEM SKU'
+                    }}
+                  </td>
+
+                  <td>
+                    {{ item.nomeProduto }}
+                  </td>
+
+                  @if (
+                    editandoItemId === item.id
+                  ) {
+
+                    <td
+                      colspan="5"
+                      class="edit-cell">
+
+                      <form
+                        [formGroup]="editarItemForm"
+                        class="inline-edit-form">
+
+                        <mat-form-field
+                          appearance="outline">
+
+                          <mat-label>
+                            Quantidade
+                          </mat-label>
+
+                          <input
+                            matInput
+                            type="number"
+                            min="1"
+                            step="1"
+                            formControlName="quantidade">
+
+                        </mat-form-field>
+
+                        <mat-form-field
+                          appearance="outline">
+
+                          <mat-label>
+                            Preço compra
+                          </mat-label>
+
+                          <span matTextPrefix>
+                            R$&nbsp;
+                          </span>
+
+                          <input
+                            matInput
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            formControlName="precoUnitarioCompra">
+
+                        </mat-form-field>
+
+                      </form>
+
+                    </td>
+
+                    <td class="text-center">
+
+                      <div class="row-actions">
+
+                        <button
+                          mat-icon-button
+                          type="button"
+                          matTooltip="Salvar"
+                          (click)="salvarItem(item)"
+                          [disabled]="salvandoItem">
+
+                          <mat-icon>
+                            check
+                          </mat-icon>
+
+                        </button>
+
+                        <button
+                          mat-icon-button
+                          type="button"
+                          matTooltip="Cancelar"
+                          (click)="
+                            cancelarEdicaoItem()
+                          ">
+
+                          <mat-icon>
+                            close
+                          </mat-icon>
+
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  } @else {
+
+                    <td class="text-right">
+                      {{ item.quantidade }}
+                    </td>
+
+                    <td class="text-right">
+                      {{
+                        item.precoUnitarioCompra
+                          | currency:'BRL':'symbol':'1.2-2'
+                      }}
+                    </td>
+
+                    <td class="text-right">
+                      {{
+                        item.valorFreteRateado
+                          | currency:'BRL':'symbol':'1.2-2'
+                      }}
+                    </td>
+
+                    <td class="text-right cost">
+                      {{
+                        item.custoEfetivoUnitario
+                          | currency:'BRL':'symbol':'1.4-4'
+                      }}
+                    </td>
+
+                    <td class="text-right">
+                      {{
+                        item.valorTotalProduto
+                          | currency:'BRL':'symbol':'1.2-2'
+                      }}
+                    </td>
+
+                    @if (podeEditar) {
+
+                      <td class="text-center">
+
+                        <div class="row-actions">
+
+                          <button
+                            mat-icon-button
+                            type="button"
+                            matTooltip="Editar item"
+                            (click)="
+                              iniciarEdicaoItem(item)
+                            ">
+
+                            <mat-icon>
+                              edit
+                            </mat-icon>
+
+                          </button>
+
+                          <button
+                            mat-icon-button
+                            type="button"
+                            class="danger-button"
+                            matTooltip="Remover item"
+                            (click)="
+                              removerItem(item)
+                            "
+                            [disabled]="
+                              removendoItemId ===
+                              item.id
+                            ">
+
+                            <mat-icon>
+                              delete
+                            </mat-icon>
+
+                          </button>
+
+                        </div>
+
+                      </td>
+
+                    }
+
+                  }
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

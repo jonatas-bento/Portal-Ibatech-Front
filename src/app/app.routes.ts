@@ -71,6 +71,33 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/estoque/movimentar-estoque/movimentar-estoque.component').then(m => m.MovimentarEstoqueComponent)
       },
       {
+        path:        'compras/nova',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Estoque'] },
+        loadComponent: () =>
+          import('./pages/compras/nova-compra/nova-compra.component')
+            .then(m => m.NovaCompraComponent),
+        title: 'Nova Entrada de Compra — IBATECH',
+      },
+      {
+        path:        'compras/:id',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Estoque'] },
+        loadComponent: () =>
+          import('./pages/compras/detalhe-compra/detalhe-compra.component')
+            .then(m => m.DetalheCompraComponent),
+        title: 'Entrada de Compra — IBATECH',
+      },
+      {
+        path:        'compras',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Estoque'] },
+        loadComponent: () =>
+          import('./pages/compras/lista-compras/lista-compras.component')
+            .then(m => m.ListaComprasComponent),
+        title: 'Entradas de Compra — IBATECH',
+      },
+      {
         path:        'financeiro',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Financeiro'] },
