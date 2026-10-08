@@ -675,6 +675,18 @@ export class EditarVendaComponent implements OnInit {
     });
   }
 
+  /**
+   * Navega para o comprovante (NÃO FISCAL) da venda concluída.
+   * Tela somente leitura — não altera a venda de forma alguma.
+   */
+  verComprovante(): void {
+    if (!this.venda || !this.vendaConcluida) {
+      return;
+    }
+
+    this.router.navigate(['/dashboard/vendas', this.venda.id, 'comprovante']);
+  }
+
   voltar(): void {
     this.router.navigate(['/dashboard/vendas']);
   }

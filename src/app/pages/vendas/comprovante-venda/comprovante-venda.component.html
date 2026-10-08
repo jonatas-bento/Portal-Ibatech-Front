@@ -1,0 +1,165 @@
+<div class="page-container comprovante-container">
+
+  <!-- Barra de ações (não aparece na impressão) -->
+  <div class="comprovante-toolbar no-print">
+    <button mat-button type="button" class="btn-brand-secondary" (click)="voltar()">
+      <mat-icon>arrow_back</mat-icon> Voltar para venda
+    </button>
+
+    <h1 class="comprovante-titulo">COMPROVANTE DE VENDA</h1>
+
+    @if (vendaConcluida) {
+      <button mat-raised-button type="button" class="btn-brand-primary" (click)="imprimir()">
+        <mat-icon>print</mat-icon> Imprimir / Salvar PDF
+      </button>
+    }
+  </div>
+
+  @if (carregando) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando comprovante...</p>
+    </div>
+  } @else if (erro) {
+    <div class="estado-aviso estado-erro">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Comprovante indisponível</h2>
+      <p class="subtitle">Não foi possível carregar os dados desta venda.</p>
+      <button mat-stroked-button type="button" class="btn-brand-secondary" (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon> Voltar para a venda
+      </button>
+    </div>
+  } @else if (venda && !vendaConcluida) {
+    <div class="estado-aviso">
+      <mat-icon>info</mat-icon>
+      <h2>Comprovante não disponível</h2>
+      <p class="subtitle">
+        O comprovante só pode ser emitido para vendas concluídas.
+        Situação atual desta venda: <strong>{{ venda.status }}</strong>.
+      </p>
+      <button mat-stroked-button type="button" class="btn-brand-secondary" (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon> Voltar para a venda
+      </button>
+    </div>
+  } @else if (venda) {
+    <!-- DOCUMENTO NÃO FISCAL — somente leitura -->
+    <div class="receipt" role="document" aria-label="Comprovante de venda não fiscal">
+
+      <!-- Cabeçalho -->
+      <header class="receipt-header">
+        <img
+          src="assets/logo-ibatech-comprovante.png"
+          alt="IBATECH Soluções Digitais"
+          class="receipt-logo">
+        <h2 class="receipt-empresa">IBATECH SOLUÇÕES DIGITAIS</h2>
+        <p class="receipt-tipo">COMPROVANTE DE VENDA</p>
+        <p class="receipt-nao-fiscal">DOCUMENTO NÃO FISCAL</p>
+        <p class="receipt-endereco">
+          Rua Dimas Ambrósio Trindade, 73<br>
+          Ibatiba - ES
+        </p>
+      </header>
+
+      <!-- Dados da venda -->
+      <section class="receipt-section receipt-dados">
+        <div class="dados-grid">
+          <div class="dado">
+            <span class="dado-label">Número da venda</span>
+            <span class="dado-valor">{{ venda.numero }}</span>
+          </div>
+          <div class="dado">
+            <span class="dado-label">Data da venda</span>
+            <span class="dado-valor">{{ formatarDataHora(venda.dataVenda) }}</span>
+          </div>
+          <div class="dado">
+            <span class="dado-label">Finalização</span>
+            <span class="dado-valor">{{ formatarDataHora(venda.dataFinalizacao) }}</span>
+          </div>
+          <div class="dado">
+            <span class="dado-label">Cliente</span>
+            <span class="dado-valor">{{ venda.clienteNome || 'Consumidor final' }}</span>
+          </div>
+          <div class="dado">
+            <span class="dado-label">Vendedor</span>
+            <span class="dado-valor">{{ venda.vendedorNome }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Itens -->
+      <section class="receipt-section">
+        <table class="receipt-table">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Produto</th>
+              <th class="num">Qtd.</th>
+              <th class="num">Preço unitário</th>
+              <th class="num">Desconto</th>
+              <th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of venda.itens; track item.id) {
+              <tr>
+                <td>{{ item.codigoSku }}</td>
+                <td>{{ item.nomeProduto }}</td>
+                <td class="num">{{ item.quantidade }}</td>
+                <td class="num">{{ formatarValor(item.precoUnitario) }}</td>
+                <td class="num">{{ formatarValor(item.desconto) }}</td>
+                <td class="num">{{ formatarValor(item.valorTotal) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Resumo financeiro (valores consolidados do backend) -->
+      <section class="receipt-section receipt-totais">
+        <div class="totais-linha">
+          <span>Valor bruto</span>
+          <span>{{ formatarValor(venda.valorBruto) }}</span>
+        </div>
+        <div class="totais-linha">
+          <span>Desconto</span>
+          <span>{{ formatarValor(venda.desconto) }}</span>
+        </div>
+        <div class="totais-linha totais-geral">
+          <span>VALOR TOTAL</span>
+          <span>{{ formatarValor(venda.valorTotal) }}</span>
+        </div>
+      </section>
+
+      <!-- Pagamento -->
+      <section class="receipt-section receipt-pagamento">
+        <div class="totais-linha">
+          <span>Forma de pagamento</span>
+          <span>{{ formaPagamentoLabel }}</span>
+        </div>
+        <div class="totais-linha">
+          <span>Valor recebido</span>
+          <span>{{ formatarValor(venda.valorRecebido) }}</span>
+        </div>
+        <div class="totais-linha">
+          <span>Troco</span>
+          <span>{{ formatarValor(venda.troco) }}</span>
+        </div>
+      </section>
+
+      <!-- Observação -->
+      @if (venda.observacao) {
+        <section class="receipt-section receipt-observacao">
+          <span class="dado-label">Observação</span>
+          <p>{{ venda.observacao }}</p>
+        </section>
+      }
+
+      <!-- Rodapé -->
+      <footer class="receipt-footer">
+        <p class="obrigado">Obrigado pela preferência!</p>
+        <p class="empresa">IBATECH SOLUÇÕES DIGITAIS</p>
+        <p class="nao-fiscal">DOCUMENTO NÃO FISCAL</p>
+      </footer>
+    </div>
+  }
+</div>

@@ -1,0 +1,372 @@
+// ── Página (preview no tema escuro do portal) ────────────────────────
+.page-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  color: var(--ib-text);
+}
+
+.comprovante-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.comprovante-titulo {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: var(--ib-text);
+}
+
+.btn-brand-primary {
+  background-color: var(--ib-green) !important;
+  color: #121212 !important;
+}
+
+.btn-brand-primary mat-icon {
+  color: #121212 !important;
+}
+
+.btn-brand-secondary {
+  color: var(--ib-green) !important;
+  border: 1px solid var(--ib-green) !important;
+}
+
+.btn-brand-secondary mat-icon {
+  color: var(--ib-green) !important;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 16px;
+}
+
+.estado-aviso {
+  text-align: center;
+  padding: 48px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ib-border);
+  background: var(--ib-surface-2);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: var(--ib-green);
+  }
+
+  h2 {
+    margin: 12px 0 4px;
+  }
+
+  .subtitle {
+    color: var(--ib-text-muted);
+    margin-bottom: 20px;
+  }
+}
+
+.estado-erro mat-icon {
+  color: var(--ib-danger);
+}
+
+// ── Comprovante (moldura/preview coerente com o tema) ────────────────
+// Estrutura pensada para futura versão térmica 80mm:
+// o bloco .receipt concentra todo o conteúdo impresso.
+.receipt {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 36px;
+  background: var(--ib-surface-2);
+  border: 1px solid var(--ib-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  color: var(--ib-text);
+}
+
+.receipt-header {
+  text-align: center;
+  border-bottom: 2px solid var(--ib-border-md);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.receipt-logo {
+  display: block;
+  height: 72px;
+  margin: 0 auto 8px;
+  // preserva as cores da marca também na impressão
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.receipt-empresa {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.receipt-tipo {
+  margin: 4px 0 0;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--ib-text-muted);
+}
+
+.receipt-nao-fiscal {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid var(--ib-gold-border);
+  border-radius: var(--radius-sm);
+  color: var(--ib-gold);
+}
+
+.receipt-endereco {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ib-text-muted);
+}
+
+.receipt-section {
+  margin-bottom: 20px;
+}
+
+// Dados da venda
+.receipt-dados {
+  border-bottom: 1px solid var(--ib-border);
+  padding-bottom: 16px;
+}
+
+.dados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 20px;
+}
+
+.dado {
+  display: flex;
+  flex-direction: column;
+}
+
+.dado-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ib-text-muted);
+}
+
+.dado-valor {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+// Tabela de itens
+.receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--ib-border);
+  }
+
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ib-text-muted);
+    border-bottom: 2px solid var(--ib-border-md);
+  }
+
+  .num {
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+
+// Resumo e pagamento
+.receipt-totais,
+.receipt-pagamento {
+  max-width: 380px;
+  margin-left: auto;
+
+  .totais-linha {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 5px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--ib-border-md);
+  }
+}
+
+.receipt-totais {
+  .totais-geral {
+    margin-top: 4px;
+    padding-top: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    border-top: 2px solid var(--ib-border-md);
+    border-bottom: none;
+    color: var(--ib-green);
+  }
+}
+
+.receipt-observacao {
+  font-size: 13px;
+
+  p {
+    margin: 4px 0 0;
+    white-space: pre-wrap;
+  }
+}
+
+// Rodapé
+.receipt-footer {
+  text-align: center;
+  border-top: 2px solid var(--ib-border-md);
+  padding-top: 16px;
+
+  .obrigado {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .empresa {
+    margin: 4px 0 0;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--ib-text-muted);
+  }
+
+  .nao-fiscal {
+    margin: 4px 0 0;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ib-text-muted);
+  }
+}
+
+// ── Responsividade ───────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .comprovante-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .receipt {
+    padding: 20px 16px;
+  }
+
+  .receipt-totais,
+  .receipt-pagamento {
+    max-width: none;
+  }
+}
+
+// ── Impressão (A4 / PDF) ─────────────────────────────────────────────
+// A navegação (sidebar/navbar/layout) é tratada pelos estilos globais
+// em styles.scss via body.ib-imprimindo-comprovante.
+@media print {
+  :host {
+    display: block;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .page-container {
+    padding: 0;
+    max-width: none;
+  }
+
+  .receipt {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    background: #fff !important;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    color: #000 !important;
+  }
+
+  .receipt-header {
+    border-bottom-color: #000;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+
+  .receipt-logo {
+    height: 80px;
+  }
+
+  .receipt-empresa,
+  .dado-valor,
+  .receipt-table,
+  .receipt-observacao,
+  .totais-linha,
+  .receipt-footer .obrigado {
+    color: #000 !important;
+  }
+
+  .receipt-tipo,
+  .receipt-endereco,
+  .dado-label,
+  .receipt-footer .empresa,
+  .receipt-footer .nao-fiscal {
+    color: #444 !important;
+  }
+
+  .receipt-nao-fiscal {
+    color: #000 !important;
+    border: 1.5px solid #000 !important;
+  }
+
+  .receipt-table {
+    th,
+    td {
+      border-bottom-color: #999;
+      color: #000 !important;
+    }
+
+    th {
+      border-bottom-color: #000;
+    }
+  }
+
+  .receipt-totais,
+  .receipt-pagamento {
+    .totais-linha {
+      border-bottom-color: #999;
+    }
+  }
+
+  .receipt-totais .totais-geral {
+    border-top-color: #000;
+    color: #000 !important;
+  }
+
+  .receipt-footer {
+    border-top-color: #000;
+  }
+}

@@ -108,6 +108,10 @@
   color: #121212 !important;
 }
 
+.btn-brand-primary mat-icon {
+  color: #121212 !important;
+}
+
 .btn-brand-secondary {
   color: var(--ib-green) !important;
   border: 1px solid var(--ib-green) !important;

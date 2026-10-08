@@ -72,6 +72,15 @@
             {{ estornandoVenda ? 'Estornando...' : 'Estornar venda' }}
           </button>
         }
+        @if (vendaConcluida) {
+          <button
+            mat-raised-button
+            type="button"
+            class="btn-brand-primary"
+            (click)="verComprovante()">
+            <mat-icon>receipt_long</mat-icon> Ver comprovante
+          </button>
+        }
         <button mat-button type="button" class="btn-brand-secondary" (click)="voltar()">
           <mat-icon>arrow_back</mat-icon> Voltar
         </button>

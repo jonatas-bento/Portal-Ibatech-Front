@@ -123,6 +123,15 @@ export const routes: Routes = [
         title: 'Vendas — IBATECH',
       },
       {
+        path:        'vendas/:id/comprovante',
+        canActivate: [roleGuard],
+        data:        { roles: ['Admin', 'Vendedor'] },
+        loadComponent: () =>
+          import('./pages/vendas/comprovante-venda/comprovante-venda.component')
+            .then(m => m.ComprovanteVendaComponent),
+        title: 'Comprovante de Venda — IBATECH',
+      },
+      {
         path:        'vendas/:id',
         canActivate: [roleGuard],
         data:        { roles: ['Admin', 'Vendedor'] },

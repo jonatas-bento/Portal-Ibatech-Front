@@ -96,6 +96,46 @@ body {
   overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
 }
 
+// ── Impressão do comprovante de venda (DOCUMENTO NÃO FISCAL) ────────
+// A tela de comprovante adiciona a classe no <body> durante o ciclo de
+// vida do componente, garantindo que apenas essa página seja afetada.
+@media print {
+  body.ib-imprimindo-comprovante {
+    background: #fff !important;
+    color: #000 !important;
+
+    // esconde a navegação do dashboard
+    app-sidebar,
+    app-navbar {
+      display: none !important;
+    }
+
+    // layout do dashboard vira fluxo simples, sem fundo escuro
+    .dashboard-container {
+      display: block !important;
+      overflow: visible !important;
+      background: #fff !important;
+    }
+
+    .dashboard-content {
+      height: auto !important;
+      min-height: 0 !important;
+    }
+
+    .dashboard-main-view {
+      height: auto !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      background: #fff !important;
+    }
+
+    // oculta botões e elementos marcados como não imprimíveis
+    .no-print {
+      display: none !important;
+    }
+  }
+}
+
 // Badge de status de projetos
 .badge {
   display: inline-flex;
